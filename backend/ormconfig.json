@@ -1,0 +1,12 @@
+{
+    "type": "postgres",
+    "host": "ecommerce_postgres_db",
+    "port": 5432,
+    "username": "ct",
+    "password": "ct123",
+    "database": "ecommerce-db",
+    "entities": ["dist/**/*.entity.js"],
+    "migrations": ["dist/migrations/*.js"],
+    "synchronize": true
+  }
+  
