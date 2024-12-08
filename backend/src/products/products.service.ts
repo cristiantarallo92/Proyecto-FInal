@@ -13,9 +13,7 @@ export class ProductsService {
   ) {}
 
   async findAll(): Promise<Product[]> {
-    return await this.productRepository.find({
-      relations: ['brand'],
-    });
+    return await this.productRepository.find();
   }
 
   async create(createProductDto: CreateProductDto): Promise<Product> {

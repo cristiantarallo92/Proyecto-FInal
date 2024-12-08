@@ -1,6 +1,7 @@
 
+import { Category } from 'src/categories/entities/category.entity';
 import { Brand } from '../../brands/entities/brand.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, ManyToMany } from 'typeorm';
 
 @Entity('products')
 export class Product {
@@ -19,6 +20,9 @@ export class Product {
   @Column()
   stock: number;
 
-  @ManyToOne(() => Brand, (brand) => brand.products, { eager: true }) // Carga automática de Brand
-  brand: Brand; // Esto debería ser un objeto, no un ID
+  @ManyToOne(() => Brand, (brand) => brand.products, { eager: true })
+  brand: Brand;
+
+  @ManyToOne(() => Category, (category) => category.products, { eager: true })
+  category: Category;
 }
