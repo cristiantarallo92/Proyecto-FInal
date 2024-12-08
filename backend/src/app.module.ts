@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsModule } from './products/products.module';
+import { BrandsModule } from './brands/brands.module';
+import { SeedModule } from './services/seed.module';
 
 @Module({
   imports: [
@@ -17,9 +17,10 @@ import { ProductsModule } from './products/products.module';
       database: process.env.DB_DATABASE,
       autoLoadEntities: true,
       synchronize: true,
-    }), ProductsModule,
+    }),
+    ProductsModule,
+    BrandsModule,
+    SeedModule, // Importa el SeedModule
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

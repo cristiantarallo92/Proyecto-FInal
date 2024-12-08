@@ -1,6 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
+import { Brand } from '../../brands/entities/brand.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+
+@Entity('products')
 export class Product {
   @PrimaryGeneratedColumn()
   id: number;
@@ -16,4 +18,7 @@ export class Product {
 
   @Column()
   stock: number;
+
+  @ManyToOne(() => Brand, (brand) => brand.products, { eager: true }) // Carga automática de Brand
+  brand: Brand; // Esto debería ser un objeto, no un ID
 }

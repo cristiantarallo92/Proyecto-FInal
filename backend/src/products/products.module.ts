@@ -3,11 +3,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsService } from './products.service';
 import { ProductsController } from './products.controller';
 import { Product } from './entities/product.entity';
-import { SeedService } from 'src/services/seed.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product])],
+  imports: [TypeOrmModule.forFeature([Product])], // Solo importa lo necesario
   controllers: [ProductsController],
-  providers: [ProductsService, SeedService],
+  providers: [ProductsService], // Elimina SeedService de aquí
+  exports: [TypeOrmModule], // Exporta para que otros módulos puedan usar ProductRepository
 })
 export class ProductsModule {}
