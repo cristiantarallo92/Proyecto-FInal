@@ -1,0 +1,20 @@
+<div class="container">
+    <div class="row" >
+        <div class="col-12" >
+           <h3  class="navbar navbar-dark bg-dark text-light p-2">
+     {{this.data.modalText}}
+           </h3>
+        </div>
+        <div class="col-12 p-1 d-flex justify-content-center" >
+         <p class="fs-5 p-2" >
+           Desea cancelar ALTA de nuevo: {{this.data.modalData.text}}? 
+         </p> 
+        </div>
+        <div class="col-12 d-flex justify-content-end p-2">
+            <button class="btn btn-dark m-1" (click)="closeModal()"> Aceptar </button>
+            <button class="btn btn-dark m-1" (click)="cancelDialog()"> Volver  </button>
+        </div>
+    </div>
+</div>
+
+

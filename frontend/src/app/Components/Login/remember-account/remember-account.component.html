@@ -1,0 +1,132 @@
+<!--
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Rememeber Account </title>
+</head>
+<body>
+    <form class="vh-100 vw-50 gradient-custom" [formGroup]="rememberAccountForm" (ngSubmit)="sendRememberAccountForm()" >
+        <div class="container py-5 h-100 w-50">
+            <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                <div class="p-5">
+                    <h1 class="display-5"> Recuperacion de cuenta </h1>
+                    <div class="mt-5">
+                        <label for="user" class="form-label fs-5 text-light"> Ingresa tu usuario </label>
+                        <input  formControlName="user" type="text" class="form-control" required>
+                    </div>
+                        <div *ngIf="rememberAccountForm.get('user').errors && rememberAccountForm.get('user').touched" class="alert alert-danger d-flex align-items-center mt-5"
+                            role="alert">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                fill="currentColor" class="bi bi-exclamation-diamond m-2"
+                                viewBox="0 0 16 16">
+                                <path
+                                    d="M6.95.435c.58-.58 1.52-.58 2.1 0l6.515 6.516c.58.58.58 1.519 0 2.098L9.05 15.565c-.58.58-1.519.58-2.098 0L.435 9.05a1.482 1.482 0 0 1 0-2.098L6.95.435zm1.4.7a.495.495 0 0 0-.7 0L1.134 7.65a.495.495 0 0 0 0 .7l6.516 6.516a.495.495 0 0 0 .7 0l6.516-6.516a.495.495 0 0 0 0-.7L8.35 1.134z" />
+                                <path
+                                    d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
+                            </svg>
+                            <strong>
+                                <div>
+                                    Ingresa tu usuario.
+                                </div>
+                            </strong>
+                        </div>
+                    <div class="mt-5">
+                        <label for="email" class="form-label fs-5 text-light"> Ingresa tu correo </label>
+                        <input formControlName="email"  type="email" class="form-control" required>
+                    </div>
+                        <div  *ngIf="rememberAccountForm.get('email').errors && rememberAccountForm.get('email').touched"  class="alert alert-danger d-flex align-items-center mt-5"
+                            role="alert">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                fill="currentColor" class="bi bi-exclamation-diamond m-2"
+                                viewBox="0 0 16 16">
+                                <path
+                                    d="M6.95.435c.58-.58 1.52-.58 2.1 0l6.515 6.516c.58.58.58 1.519 0 2.098L9.05 15.565c-.58.58-1.519.58-2.098 0L.435 9.05a1.482 1.482 0 0 1 0-2.098L6.95.435zm1.4.7a.495.495 0 0 0-.7 0L1.134 7.65a.495.495 0 0 0 0 .7l6.516 6.516a.495.495 0 0 0 .7 0l6.516-6.516a.495.495 0 0 0 0-.7L8.35 1.134z" />
+                                <path
+                                    d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
+                            </svg>
+                            <strong>
+                                <div>
+                                   Ingresa Un correo valido.
+                                </div>
+                            </strong>
+                        </div>
+                    <button [disabled]="rememberAccountForm.invalid" *ngIf="showButton" type="submit" class="btn btn-outline-light btn-lg px-5 mt-5">Enviar</button>
+                    <ng-container *ngIf="loading">
+                        <div class="text-center pt-5">
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden"> </span>
+                            </div>
+                        </div>
+                    </ng-container>
+                    <ng-container>
+                        <div *ngIf="errorMesagge" class="alert alert-danger d-flex align-items-center mt-5"
+                            role="alert">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                fill="currentColor" class="bi bi-exclamation-diamond m-2"
+                                viewBox="0 0 16 16">
+                                <path
+                                    d="M6.95.435c.58-.58 1.52-.58 2.1 0l6.515 6.516c.58.58.58 1.519 0 2.098L9.05 15.565c-.58.58-1.519.58-2.098 0L.435 9.05a1.482 1.482 0 0 1 0-2.098L6.95.435zm1.4.7a.495.495 0 0 0-.7 0L1.134 7.65a.495.495 0 0 0 0 .7l6.516 6.516a.495.495 0 0 0 .7 0l6.516-6.516a.495.495 0 0 0 0-.7L8.35 1.134z" />
+                                <path
+                                    d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 4.995z" />
+                            </svg>
+                            <strong>
+                                <div>
+                                   El usuario y/o el correo ingresado es incorrecto.
+                                </div>
+                            </strong>
+                        </div>
+                    </ng-container>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+
+-->
+<form class="was-validated">
+    <div class="mb-3">
+      <label for="validationTextarea" class="form-label">Textarea</label>
+      <textarea class="form-control" id="validationTextarea" placeholder="Required example textarea" required></textarea>
+    
+    </div>
+  
+    <div class="form-check mb-3">
+      <input type="checkbox" class="form-check-input" id="validationFormCheck1" required>
+      <label class="form-check-label" for="validationFormCheck1">Check this checkbox</label>
+      <div class="invalid-feedback">Example invalid feedback text</div>
+    </div>
+  
+    <div class="form-check">
+      <input type="radio" class="form-check-input" id="validationFormCheck2" name="radio-stacked" required>
+      <label class="form-check-label" for="validationFormCheck2">Toggle this radio</label>
+    </div>
+    <div class="form-check mb-3">
+      <input type="radio" class="form-check-input" id="validationFormCheck3" name="radio-stacked" required>
+      <label class="form-check-label" for="validationFormCheck3">Or toggle this other radio</label>
+      <div class="invalid-feedback">More example invalid feedback text</div>
+    </div>
+  
+    <div class="mb-3">
+      <select class="form-select" required aria-label="select example">
+        <option value="">Open this select menu</option>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+      </select>
+      <div class="invalid-feedback">Example invalid select feedback</div>
+    </div>
+  
+    <div class="mb-3">
+      <input type="file" class="form-control" aria-label="file example" required>
+      <div class="invalid-feedback">Example invalid form file feedback</div>
+    </div>
+  
+    <div class="mb-3">
+      <button class="btn btn-primary" type="submit" disabled>Submit form</button>
+    </div>
+  </form>
