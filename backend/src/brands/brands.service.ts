@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
 import { Repository } from 'typeorm';
@@ -12,8 +12,9 @@ export class BrandsService {
     private readonly brandRepository: Repository<Brand>,
   ) {}
 
-  create(createBrandDto: CreateBrandDto) {
-    return 'This action adds a new brand';
+  async create(createBrandDto: CreateBrandDto) {
+    const brand = this.brandRepository.create(createBrandDto);
+    return await this.brandRepository.save(brand);
   }
 
   async findAll() {
@@ -24,8 +25,12 @@ export class BrandsService {
     return `This action returns a #${id} brand`;
   }
 
-  update(id: number, updateBrandDto: UpdateBrandDto) {
-    return `This action updates a #${id} brand`;
+  async update(id: number, updateBrandDto: UpdateBrandDto) {
+    const brand = await this.findOne(id);
+    if (!brand) {
+      throw new NotFoundException('Brand not found');
+    }
+    return await this.brandRepository.update(id, updateBrandDto);
   }
 
   remove(id: number) {

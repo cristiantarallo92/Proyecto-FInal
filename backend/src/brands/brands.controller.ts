@@ -8,8 +8,8 @@ export class BrandsController {
   constructor(private readonly brandsService: BrandsService) {}
 
   @Post()
-  create(@Body() createBrandDto: CreateBrandDto) {
-    return this.brandsService.create(createBrandDto);
+  async create(@Body() createBrandDto: CreateBrandDto) {
+    return await this.brandsService.create(createBrandDto);
   }
 
   @Get()
@@ -23,8 +23,8 @@ export class BrandsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBrandDto: UpdateBrandDto) {
-    return this.brandsService.update(+id, updateBrandDto);
+  async update(@Param('id') id: string, @Body() updateBrandDto: UpdateBrandDto) {
+    return await this.brandsService.update(+id, updateBrandDto);
   }
 
   @Delete(':id')

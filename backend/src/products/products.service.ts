@@ -1,28 +1,75 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { Repository } from 'typeorm';
+import { FindAllProductsDto } from './dto/find-all-products.dto';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product)
-    private productRepository: Repository<Product>,
+    private readonly productRepository: Repository<Product>,
   ) {}
 
-  async findAll(): Promise<Product[]> {
-    return await this.productRepository.find();
-  }
+  async findAll(dto: FindAllProductsDto): Promise<Product[]> {
+    const { quickSearch, categoryId, brandId } = dto;
 
-  async create(createProductDto: CreateProductDto): Promise<Product> {
-    const product = this.productRepository.create(createProductDto);
-    return await this.productRepository.save(product);
+    const query = this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.brand', 'brand')
+      .leftJoinAndSelect('product.category', 'category');
+
+    if (quickSearch) {
+      query.andWhere('product.name ILIKE :quickSearch', {
+        quickSearch: `%${quickSearch}%`,
+      });
+    }
+
+    if (categoryId) {
+      query.andWhere('product.categoryId = :categoryId', {
+        categoryId,
+      });
+    }
+
+    if (brandId) {
+      query.andWhere('product.brandId = :brandId', {
+        brandId,
+      });
+    }
+
+    return await query.getMany();
   }
 
   async findOne(id: number): Promise<Product> {
-    return await this.productRepository.findOneBy({ id });
+    const product = await this.productRepository.findOneBy({ id });
+    if (!product) {
+      throw new NotFoundException('Producto no encontrado');
+    }
+    return product;
+  }
+
+  async create(createProductDto: CreateProductDto) {
+    const existingProduct = await this.productRepository
+      .createQueryBuilder('product')
+      .where('LOWER(product.name) = LOWER(:name)', {
+        name: createProductDto.name,
+      })
+      .getOne();
+
+    if (existingProduct) {
+      throw new ConflictException(
+        `El producto con nombre "${createProductDto.name}" ya existe`,
+      );
+    }
+
+    const product = this.productRepository.create(createProductDto);
+    return await this.productRepository.save(product);
   }
 
   async update(
@@ -31,7 +78,7 @@ export class ProductsService {
   ): Promise<Product> {
     const product = await this.findOne(id);
     if (!product) {
-      throw new NotFoundException('Product not found');
+      throw new NotFoundException('Producto no encontrado');
     }
     return await this.productRepository.save({
       ...product,
@@ -39,7 +86,12 @@ export class ProductsService {
     });
   }
 
-  async remove(id: number) {
-    return await this.productRepository.delete(id);
+  async remove(id: number): Promise<Product> {
+    const product = await this.findOne(id);
+    if (!product) {
+      throw new NotFoundException('Producto no encontrado');
+    }
+    await this.productRepository.delete(id);
+    return product;
   }
 }

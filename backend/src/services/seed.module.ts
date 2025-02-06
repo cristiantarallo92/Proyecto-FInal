@@ -9,11 +9,11 @@ import { Category } from '../categories/entities/category.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Product, Brand, Category]), // Registra las entidades necesarias
+    TypeOrmModule.forFeature([Product, Brand, Category]),
     ProductsModule,
     BrandsModule,
   ],
-  providers: [SeedService], // Declara el SeedService aquí
-  exports: [SeedService], // Exporta el SeedService si es necesario
+  providers: [SeedService],
+  exports: [SeedService],
 })
 export class SeedModule {}

@@ -42,7 +42,7 @@ services:
       - '3000:3000'
     depends_on:
       - ecommerce_postgres_db
-    command: npm run start
+    command: npm run start:dev
 
 volumes:
   pg_data:
