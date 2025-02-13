@@ -84,11 +84,11 @@ export class InfoCategoriasComponent implements OnInit {
     }
  
 
-    getFormsValues(){
+    getFormsValues(){ /*
     this.ncategory.categoryId = 1;
     this.ncategory.categoryName = this.categoryForm.controls['categoryName'].value;
     this.ncategory.categoryDescription = this.categoryForm.controls['categoryDescription'].value;
-    this.ncategory.availability = this.categoryForm.controls['availability'].value;
+    this.ncategory.availability = this.categoryForm.controls['availability'].value; */
      }
 
     getInputActive(input: string){

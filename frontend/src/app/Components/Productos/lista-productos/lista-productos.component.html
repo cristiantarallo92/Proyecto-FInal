@@ -19,18 +19,19 @@
                             <div class="input-group m-2">
                                 <label class="input-group-text bg-dark text-white w-50"  for="inputGroupSelect01"> Categoria </label>
                                 <select class="form-select" formControlName="category">
-                                <option  [selected]="selected" [value]="c.nombreCategoria" *ngFor="let c of categorias"> {{ c.nombreCategoria }} </option>>
+                                <option  [selected]="selected" [value]="c.name" *ngFor="let c of categories"> {{ c.name }} </option>>
                                 </select>
                             </div>
                             <div class="input-group m-2">
                                 <label  class="input-group-text bg-dark text-white w-50" for="inputGroupSelect01"> Marca </label>
                                 <select  class="form-select" formControlName="brand" >
-                                <option [value]="m.nombreMarca" *ngFor="let m of marcas"> {{ m.nombreMarca }} </option>
+                                <option [value]="b.name" *ngFor="let b of brands"> {{ b.name }} </option>
                                 </select>
                             </div>
                         </div> 
                     </div>
                     <div class="col-12 d-flex justify-content-end mt-3 ">
+                            <button (click)="addProduct()" class="btn btn-outline-light me-2"> Agregar  Producto  </button>
                             <button (click)="clearProductsFilter()" class="btn btn-outline-light me-2"> Quitar Filtros </button>
                             <button (click)="filterProducts()" class="btn btn-outline-light"> Aplicar Filtros </button>
                     </div>
@@ -61,9 +62,9 @@
                     </tr>
                     -->
                     <tr *ngFor="let p of products">
-                        <td class="align-middle"> {{p.productName}} </td>
-                        <td class="align-middle"> {{p.brand}} </td>
-                        <td class="align-middle"> {{p.category}} </td>
+                        <td class="align-middle"> {{p.name}} </td>
+                        <td class="align-middle"> {{p.brand.name}} </td>
+                        <td class="align-middle"> {{p.category.name}} </td>
                         <td class="align-middle"> {{p.price}} </td>
                         <td class="align-middle"> {{p.stock}} </td>
                         <td class="align-middle">

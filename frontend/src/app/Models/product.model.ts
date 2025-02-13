@@ -1,10 +1,16 @@
 
 export class Product {
     id:           number;
-    productName:  string;
-    descripcion:  string;
-    brand:        string; 
-    category:    string;
+    name:  string;
+    description:  string;
+    brand:  {
+                id     : number,
+                name   : string
+            }
+    category:   {
+                  id     : number,
+                  name   : string
+                }
     price:       number;
     stock:        number;
 }

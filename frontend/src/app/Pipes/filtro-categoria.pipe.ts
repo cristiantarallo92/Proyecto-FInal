@@ -16,9 +16,9 @@ export class FilterCategory implements PipeTransform {
         return categories.slice(page, page + 5) 
     } else {
         //return categories.filter( c => {  return c.categoryName.toLocaleLowerCase().includes(categorySearched.toLowerCase())})
-      return categories.filter( (c) => {
-           return    c.categoryName.toLowerCase().includes( categorySearched.toLowerCase())
-         }) //categories.filter( c => c.categoryName.toLowerCase().includes(categorySearched.toLowerCasee())
+      //return categories.filter( (c) => {
+ //          return    c.categoryName.toLowerCase().includes( categorySearched.toLowerCase())
+        // }) //categories.filter( c => c.categoryName.toLowerCase().includes(categorySearched.toLowerCasee())
           
       }
     }

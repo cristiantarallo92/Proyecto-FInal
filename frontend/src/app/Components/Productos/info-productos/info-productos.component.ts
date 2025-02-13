@@ -1,9 +1,19 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+
 import { CancelEditionComponent } from '../../Actions/Cancel-Edition/cancel-edition.component';
+
+import { BrandService } from 'src/app/Services/brand.service';
+import { CategoryService } from 'src/app/Services/category.service'; 
+import { ProductService } from 'src/app/Services/product.service'; 
+
 import { Input } from 'src/app/Models/input.model'; 
 import { Product } from 'src/app/Models/product.model'; 
+import { Brand } from 'src/app/Models/brand.model';
+import { Category } from '../../../Models/category.model';
+
+
 
 @Component({
     selector: 'app-info-productos',
@@ -12,23 +22,24 @@ import { Product } from 'src/app/Models/product.model';
 })
 export class InfoProductosComponent implements OnInit {
     
-    nproduct = new Product();
-    editProduct: Product;
+    product = new Product();
     productForm: FormGroup = new FormGroup({
-        productName: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(15)]),
-        descripcion: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]),
+        name: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]),
+        description: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]),
         category: new FormControl('', [Validators.required]),
         brand: new FormControl('', [Validators.required]),
         stock: new FormControl('', [Validators.required, Validators.pattern(/^-?\d*\.?\d+$/)]),
         price: new FormControl('', [Validators.required, Validators.pattern(/^-?\d*\.?\d+$/)])
     });
+    brands: Brand[];
+    categories: Category[];
     formInputs: Input [] = [{
-        inputName: 'productName',
+        inputName: 'name',
         editMode: true,
         saveMode: false
     },
     {
-        inputName: 'descripcion',
+        inputName: 'description',
         editMode: true,
         saveMode: false
     },
@@ -52,94 +63,73 @@ export class InfoProductosComponent implements OnInit {
         editMode: true,
         saveMode: false
     }]
-    marcas: any[] = [
-        {
-            id: 0,
-            nombreMarca: "Todos"
-        },
-        {
-            id: 1,
-            nombreMarca: "Terrabussi"
-        },
-        {
-            id: 2,
-            nombreMarca: "ARCOR",
-        },
-        {
-            id: 3,
-            nombreMarca: "Fel Fort"
-        }]
+   
 
-    categorias: any[] = [
-        {
-            id: 0,
-            nombreCategoria: "Todos"
-        },
-        {
-            id: 1,
-            nombreCategoria: "Alfajores"
-        },
-        {
-            id: 2,
-            nombreCategoria: "Chocolate"
-        },
-        {
-            id: 3,
-            nombreCategoria: "Golosina"
-        }]
-
-    constructor(private dialog: MatDialog,
-        public dialogRef: MatDialogRef<InfoProductosComponent>, @Inject(MAT_DIALOG_DATA) public data: any
+    constructor(private brandService: BrandService,
+                private categoryService: CategoryService, 
+                private productService: ProductService,
+                private dialog: MatDialog,
+                public dialogRef: MatDialogRef<InfoProductosComponent>, @Inject(MAT_DIALOG_DATA) public data: any
     ) { }
 
     ngOnInit(): void {
+        this.brandService.getBrands().then( ( res ) => {
+            this.brands  = res.data 
+            console.log("Braandss  - ", this.brands)
+        })
+        this.categoryService.getCategories().then( ( res ) => {
+            this.categories  = res.data  
+            console.log("categories  - ", this.categories)
+        })  
+        console.log("MODAL  -  " , this.data)
         this.configModal();
     }
 
     configModal(): void {
         if (this.data.showEditIcon == true) {
-            this.editProduct = this.data.product;
-            this.productForm.controls['nombre'].setValue(this.editProduct.productName);
-            this.productForm.controls['descripcion'].setValue(this.editProduct.descripcion);
-            this.productForm.controls['categoria'].setValue(this.editProduct.category);
-            this.productForm.controls['marca'].setValue(this.editProduct.brand);
-            this.productForm.controls['stock'].setValue(this.editProduct.stock);
-            this.productForm.controls['precio'].setValue(this.editProduct.price);
+            this.product = this.data.product;
+            console.log("product", this.product)
+            console.log("data.product", this.data.product)
+            this.productForm.controls['name'].setValue(this.product.name);
+            this.productForm.controls['description'].setValue(this.product.description);
+            this.productForm.controls['category'].setValue(this.product.category.name);
+            this.productForm.controls['brand'].setValue(this.product.brand.name);
+            this.productForm.controls['stock'].setValue(this.product.stock);
+            this.productForm.controls['price'].setValue(this.product.price);
             this.disabledInput();
         }
     }
 
     disabledInput(): void {
-        this.productForm.controls['nombre'].disable();
-        this.productForm.controls['descripcion'].disable();
-        this.productForm.controls['categoria'].disable();
-        this.productForm.controls['marca'].disable();
-        this.productForm.controls['disponibilidad'].disable();
+        this.productForm.controls['name'].disable();
+        this.productForm.controls['description'].disable();
+        this.productForm.controls['category'].disable();
+        this.productForm.controls['brand'].disable();
         this.productForm.controls['stock'].disable();
-        this.productForm.controls['precio'].disable();
+        this.productForm.controls['price'].disable();
         //  this.productForm.controls[`${input}`].disable();
     }
 
     configInput(input: string): void {
         console.log("configInput", input)
         switch (input) {
-            case 'nombre':
-                this.productForm.controls[`${input}`].setValue(this.editProduct.productName);
+            case 'name':
+               // this.productForm.controls[`${input}`].setValue(this.product.productName);
                 break;
-            case 'descripcion':
-                this.productForm.controls[`${input}`].setValue(this.editProduct.descripcion);
+            case 'description':
+                this.productForm.controls[`${input}`].setValue(this.product.description);
                 break;
-            case 'categoria':
-                this.productForm.controls[`${input}`].setValue(this.editProduct.category);
+            case 'category':
+                this.productForm.controls[`${input}`].setValue(this.product.category.name);
                 break;
-            case 'marca':
-                this.productForm.controls[`${input}`].setValue(this.editProduct.brand);
+            case 'brand':
+                this.productForm.controls[`${input}`].setValue(this.product.brand.name);
                 break;
             case 'stock':
-                this.productForm.controls[`${input}`].setValue(this.editProduct.stock);
+                this.productForm.controls[`${input}`].setValue(this.product.stock);
                 break;
             case 'precio':
-                this.productForm.controls[`${input}`].setValue(this.editProduct.price);
+                this.productForm.controls[`${input}`].setValue(this.product.price);
                 break;
         }
     }
@@ -174,25 +164,45 @@ export class InfoProductosComponent implements OnInit {
         return this.formInputs.findIndex(inp => inp.editMode == false);
     }
 
-    getFormsValues(){
-        this.nproduct.productName = this.productForm.controls['nombre'].value;
-        this.nproduct.descripcion = this.productForm.controls['descripcion'].value;
-        this.nproduct.category = this.productForm.controls['categoria'].value;
-        this.nproduct.brand = this.productForm.controls['marca'].value;
-        this.nproduct.stock = this.productForm.controls['stock'].value;
-        this.nproduct.price = this.productForm.controls['precio'].value;
+    getFormsValues():void {
+        this.product.name = this.productForm.controls['name'].value;
+        this.product.description = this.productForm.controls['description'].value;
+        this.product.category = this.productForm.controls['category'].value;
+        this.product.brand = this.productForm.controls['brand'].value;
+        this.product.stock = this.productForm.controls['stock'].value;
+        this.product.price = this.productForm.controls['price'].value;
+        console.log("PRODUCTO !! - ", this.product)
     }
 
     saveModal() {
-        console.log("FORM A GUARDAR", this.productForm.value)
+    if (this.getInputIndex() == -1) {
         this.getFormsValues();
-        console.log("PRODUCTO A GUARDAR", this.nproduct) 
-        if (this.getInputIndex() == -1) {
-            this.getFormsValues();
-            this.dialogRef.close(this.nproduct)
+        if( this.data.showEditIcon) {
+                console.log("EDITA PROD")
+                this.productService.editProduct(this.product.id, this.product ).then( ( res )=> {
+                   if(res.status == 200 ){
+                    window.alert("Producto editado correctamente. ");
+                    this.dialogRef.close();
+                     }  
+                }).catch ( ( err )=> {
+                    console.log("err", err)
+                    window.alert("ERROR - No pudo completarse la edicion del producto. Por favor intente nuevamente en unos minutos ...");
+                    this.dialogRef.close();
+                })
+            } else {
+                this.dialog.open(CancelEditionComponent, { disableClose: true })
+            }       
         } else {
-            this.dialog.open(CancelEditionComponent, { disableClose: true })
-        } 
+            this.productService.addProduct(this.product).then( ( res ) => {
+                if(res.status == 200 ) {
+                    window.alert("Producto agregado correctamente. ");
+                    this.dialogRef.close();
+                }  
+            }).catch( ( err ) => {
+                window.alert("ERROR - No pudo agregar el producto. Por favor intente nuevamente en unos minutos ...");
+                this.dialogRef.close();
+            })
+        }       
     }
 
     cancelModal() {

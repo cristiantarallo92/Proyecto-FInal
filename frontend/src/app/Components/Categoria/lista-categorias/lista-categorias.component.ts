@@ -23,7 +23,7 @@ export class ListaCategoriaComponent implements OnInit {
   <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z"/>
   <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8m0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0M4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0"/>
 </svg>`
-  category = new Category(); 
+  category = new Category(); /*
   categories:  Category[] = [{  
     categoryName:         "Bebidas",
     categoryDescription:  "Bebidas 1LT",
@@ -83,7 +83,7 @@ export class ListaCategoriaComponent implements OnInit {
     categoryDescription:  "Bebidas No Alcoholicas",
     availability:         "Activa",
     categoryId:           11
-  }]
+  }]  */
 
   categorySearchForm: FormGroup = new FormGroup({
     category: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(15)])});
@@ -97,12 +97,12 @@ addCategory(): void {
         data: modal
     }) 
     dialog.afterClosed().subscribe( (res: Category) => {
-        console.log("res", res)
-        this.category.categoryId = 99;
+        //console.log("res")
+       /* this.category.categoryId = 99;
         this.category.categoryName = res.categoryName;
         this.category.categoryDescription = res.categoryDescription;
         this.category.availability = res.availability;
-        this.categories.push(this.category);
+        this.categories.push(this.category); */
     })
   
 } 
@@ -112,25 +112,25 @@ editCategory(category: Category) {
     const dialog = this.dialog.open( InfoCategoriasComponent, {
         disableClose: true,
         data: modal
-    })
-    dialog.afterClosed().subscribe(( res:Category ) => {
+    })/*
+    dialog.afterClosed().subscribe(( res:Category ) => {  
         console.log("EDITADO", res)
         this.categories.filter( ( category ) => {
             if( category.categoryId == res.categoryId  ){
                 category.categoryName = res.categoryName;
                 category.categoryDescription = res.categoryDescription;
-                category.availability = res.availability;
             }
         } )
-     })
+     })  */
 }
 
-deleteCategory( category: Category ) {
-    var modal:ModalData  = new ModalData('Eliminar Categoria', false, category)  
-    const dialog = this.dialog.open(DeleteItemComponent, {
-        disableClose: true,
-        data: modal,
-    })
+
+// deleteCategory( category: Category ) {  
+//    var modal:ModalData  = new ModalData('Eliminar Categoria', false, category)  
+//    const dialog = this.dialog.open(DeleteItemComponent, {
+//        disableClose: true,
+//        data: modal,
+//    })  
 /*    dialog.afterClosed().subscribe(res => {
         if( res == null || res == undefined ) {
 
@@ -138,19 +138,24 @@ deleteCategory( category: Category ) {
        this.categories = this.categories.filter( item => item.categoryId !== res)
         }
     }) */
-}
+//}
 
+/*
 searchCategory(){
-    this.categorySearch = this.categorySearchForm.value['category']
+   this.categorySearch = this.categorySearchForm.value['category']
     console.log("Searching category")
     console.log("Value: ",this.categorySearch )
     console.log("type",typeof(this.categorySearch))
-
 }
+*/
+
+/*
 removeCategoryFilter(){
     this.page = 0;
     this.categorySearchForm.get('category').setValue('');
 }
+*/    
+
 
 previousPage() {
     if (this.page > 0) {

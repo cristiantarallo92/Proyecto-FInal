@@ -10,17 +10,17 @@
         <div class="col-12">
             <form class="was-validated" [formGroup]="productForm">
                 <div class="col-12 d-flex flex-row">
-                    <div class="col-6 mt-3 d-flex flex-column">
+                    <div class="col-12 mt-3 d-flex flex-column">
                         <div>
-                            <label for="nombre" class="form-label">  Produto </label>
+                            <label for="name" class="form-label">  Producto </label>
                         </div>
                         <div class="d-flex flex-column">
                             <div class="d-flex flex-row">
-                                <input type="text" class="form-control me-2" id="nombre" placeholder="Ingrese Produto"
-                                    formControlName="productName" required>
+                                <input type="text" class="form-control me-2" id="name" placeholder="Ingrese Produto"
+                                    formControlName="name" required>
                                 <div *ngIf="data.showEditIcon">
                                     <ng-container *ngIf="formInputs[0].editMode">
-                                        <button class="btn btn-light" (click)="editControl('nombre')" type="submit">
+                                        <button class="btn btn-light" (click)="editControl('name')" type="submit">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                 fill="currentColor" class="bi bi-pencil-fill" viewBox="0 0 16 16">
                                                 <path
@@ -29,8 +29,8 @@
                                         </button>
                                     </ng-container>
                                     <ng-container *ngIf="formInputs[0].saveMode">
-                                        <button [disabled]="this.productForm.get('nombre').invalid" class="btn btn-light"
-                                            (click)="saveControl('nombre')" type="submit">
+                                        <button [disabled]="this.productForm.get('name').invalid" class="btn btn-light"
+                                            (click)="saveControl('name')" type="submit">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                 fill="currentColor" class="bi bi-floppy-fill" viewBox="0 0 16 16">
                                                 <path
@@ -44,28 +44,30 @@
                             </div>
                             <div class="mt-2">
                                 <div
-                                    *ngIf="(this.productForm.get('nombre').hasError('required') && data.showEditIcon) || 
-                        (this.productForm.get('nombre').hasError('required') && this.productForm.get('nombre').touched && data.showEditIcon == false)">
+                                    *ngIf="(this.productForm.get('name').hasError('required') && data.showEditIcon) || 
+                        (this.productForm.get('name').hasError('required') && this.productForm.get('name').touched && data.showEditIcon == false)">
                                     <p class="text-danger h6"> Este campo es obligatorio </p>
                                 </div>
                                 <div
-                                    *ngIf="this.productForm.get('nombre').hasError('minlength')  || this.productForm.get('nombre').hasError('maxlength')">
-                                    <p class="text-danger h6"> Este campo admite entre 5 y 15 caracteres </p>
+                                    *ngIf="this.productForm.get('name').hasError('minlength')  || this.productForm.get('name').hasError('maxlength')">
+                                    <p class="text-danger h6"> Este campo admite entre 5 y 50 caracteres </p>   
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 mt-3 d-flex flex-column">
+                </div>
+                <div class="col-12 d-flex flex-row">
+                    <div class="col-12 mt-3 d-flex flex-column">
                         <div class="col-12">
-                            <label for="descripcion" class="form-label"> Descripcion  </label>
+                            <label for="description" class="form-label"> Descripcion  </label>
                         </div>
                         <div class="col-12">
                             <div class="d-flex">
-                                <input type="text" class="form-control me-2" id="descripcion"
-                                    placeholder="Ingrese una descripcion" formControlName="descripcion" required>
+                                <input type="text" class="form-control me-2" id="description"
+                                    placeholder="Ingrese una description" formControlName="description" required>
                                 <div *ngIf="data.showEditIcon">
                                     <ng-container *ngIf="formInputs[1].editMode">
-                                        <button class="btn btn-light" (click)="editControl('descripcion')" type="submit">
+                                        <button class="btn btn-light" (click)="editControl('description')" type="submit">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                                 class="bi bi-pencil-fill" viewBox="0 0 16 16">
                                                 <path
@@ -74,8 +76,8 @@
                                         </button>
                                     </ng-container>
                                     <ng-container *ngIf="formInputs[1].saveMode">
-                                        <button [disabled]="this.productForm.get('descripcion').invalid" class="btn btn-light"
-                                            (click)="saveControl('descripcion')">
+                                        <button [disabled]="this.productForm.get('description').invalid" class="btn btn-light"
+                                            (click)="saveControl('description')">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                                 class="bi bi-floppy-fill" viewBox="0 0 16 16">
                                                 <path
@@ -87,23 +89,34 @@
                                     </ng-container>
                                 </div>
                             </div>
+                            <div class="mt-2">
+                                <div
+                                    *ngIf="(this.productForm.get('description').hasError('required') && data.showEditIcon) || 
+                        (this.productForm.get('description').hasError('required') && this.productForm.get('name').touched && data.showEditIcon == false)">
+                                    <p class="text-danger h6"> Este campo es obligatorio </p>
+                                </div>
+                                <div
+                                    *ngIf="this.productForm.get('description').hasError('minlength')  || this.productForm.get('name').hasError('maxlength')">
+                                    <p class="text-danger h6"> Este campo admite entre 5 y 100 caracteres </p>   
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-12  d-flex flex-row">
-                    <div class="col-6  mt-3 d-flex flex-column">
+                    <div class="col-6  mt-3 p-1 d-flex flex-column"> 
                         <div>
                             <label for="inputState" class="form-label"> Categoria </label>
                         </div>
                         <div class="d-flex">
                             <select id="inputState" class="form-select me-2" formControlName="category">
                                 <option *ngIf="!data.showEditIcon" hidden selected> Seleccione una categoria </option>
-                                <option *ngIf="data.showEditIcon" hidden selected> {{this.data.product.categoria}} </option>
-                                <option *ngFor="let c of categorias"> {{c.nombreCategoria}} </option>
+                                <option *ngIf="data.showEditIcon" hidden selected> {{ this.productForm.controls['category'].value }} </option> 
+                                <option *ngFor="let c of categories"> {{c.name}} </option>
                             </select>
                             <div *ngIf="data.showEditIcon">
                                 <ng-container *ngIf="formInputs[2].editMode">
-                                    <button class="btn btn-light" (click)="editControl('categoria')">
+                                    <button class="btn btn-light" (click)="editControl('category')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-pencil-fill" viewBox="0 0 16 16">
                                             <path
@@ -112,7 +125,7 @@
                                     </button>
                                 </ng-container>
                                 <ng-container *ngIf="formInputs[2].saveMode">
-                                    <button class="btn btn-light" (click)="saveControl('categoria')">
+                                    <button class="btn btn-light" (click)="saveControl('category')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-floppy-fill" viewBox="0 0 16 16">
                                             <path
@@ -126,25 +139,24 @@
                         </div>
                         <div class="mt-2">
                             <div
-                                *ngIf="(this.productForm.get('categoria').hasError('required') && this.productForm.get('categoria').touched && data.showEditIcon == false)">
-                                <p class="text-danger h6"> Necesita asignar una categoria al producto </p>
+                                *ngIf="(this.productForm.get('category').hasError('required') && this.productForm.get('category').touched && data.showEditIcon == false)">
+                                <p class="text-danger h6"> Necesita asignar una category al producto </p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-6  mt-3 d-flex flex-column">
+                    <div class="col-6  mt-3 p-1 d-flex flex-column">
                         <div>
                             <label for="inputState" class="form-label"> Marca </label>
                         </div>
                         <div class="d-flex">
                             <select id="inputState" class="form-select me-2" formControlName="brand">
                                 <option *ngIf="!data.showEditIcon" hidden selected> Seleccione una marca </option>
-                                <option *ngIf="data.showEditIcon" hidden selected> {{this.data.product.marca}} </option>
-                                <option *ngFor="let m of marcas"> {{m.nombreMarca}} </option>
-                                <option *ngIf="data.showEditIcon"> {{data.product.marca}}</option>
+                                <option *ngIf="data.showEditIcon"> {{ this.productForm.controls['brand'].value }}</option>
+                                <option *ngFor="let b of brands"> {{b.name}} </option>
                             </select>
                             <div *ngIf="data.showEditIcon">
                                 <ng-container *ngIf="formInputs[3].editMode">
-                                    <button class="btn btn-light" (click)="editControl('marca')">
+                                    <button class="btn btn-light" (click)="editControl('brand')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-pencil-fill" viewBox="0 0 16 16">
                                             <path
@@ -153,7 +165,7 @@
                                     </button>
                                 </ng-container>
                                 <ng-container *ngIf="formInputs[3].saveMode">
-                                    <button class="btn btn-light" (click)="saveControl('marca')">
+                                    <button class="btn btn-light" (click)="saveControl('brand')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-floppy-fill" viewBox="0 0 16 16">
                                             <path
@@ -167,20 +179,20 @@
                         </div>
                         <div class="mt-2">
                             <div
-                                *ngIf="(this.productForm.get('marca').hasError('required') && this.productForm.get('marca').touched && data.showEditIcon == false)">
+                                *ngIf="(this.productForm.get('brand').hasError('required') && this.productForm.get('brand').touched && data.showEditIcon == false)">
                                 <p class="text-danger h6"> Necesita asignar una marca al producto </p>
                             </div>
                         </div>
                     </div>  
                 </div>
                 <div class="col-12 d-flex flex-row">
-                    <div class="col-6  mt-3"> 
+                    <div class="col-6  mt-3 p-1"> 
                         <label for="exampleFormControlInput1" class="form-label"> Stock </label>
                         <div class="d-flex">
                             <input type="number" class="form-control me-2" id="exampleFormControlInput1"
                                 placeholder="Ingrese stock del producto" formControlName="stock">
                             <div *ngIf="data.showEditIcon">
-                                <ng-container *ngIf="formInputs[5].editMode">
+                                <ng-container *ngIf="formInputs[4].editMode">
                                     <button class="btn btn-light" (click)="editControl('stock')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-pencil-fill" viewBox="0 0 16 16">
@@ -189,7 +201,7 @@
                                         </svg>
                                     </button>
                                 </ng-container>
-                                <ng-container *ngIf="formInputs[5].saveMode">
+                                <ng-container *ngIf="formInputs[4].saveMode">
                                     <button [disabled]="this.productForm.get('stock').invalid" class="btn btn-light"
                                         (click)="saveControl('stock')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -214,14 +226,14 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 mt-3">
+                    <div class="col-6 mt-3 p-1">
                         <label for="exampleFormControlInput1" class="form-label"> Precio </label>
                         <div class="d-flex">
                             <input type="number" class="form-control me-2" id="exampleFormControlInput1"
                                 placeholder="Ingrese precio del producto" formControlName="price">
                             <div *ngIf="data.showEditIcon">
-                                <ng-container *ngIf="formInputs[6].editMode">
-                                    <button class="btn btn-light" (click)="editControl('precio')">
+                                <ng-container *ngIf="formInputs[5].editMode">
+                                    <button class="btn btn-light" (click)="editControl('price')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-pencil-fill" viewBox="0 0 16 16">
                                             <path
@@ -229,9 +241,9 @@
                                         </svg>
                                     </button>
                                 </ng-container>
-                                <ng-container *ngIf="formInputs[6].saveMode">
-                                    <button [disabled]="this.productForm.get('precio').invalid" class="btn btn-light"
-                                        (click)="saveControl('precio')">
+                                <ng-container *ngIf="formInputs[5].saveMode">
+                                    <button [disabled]="this.productForm.get('price').invalid" class="btn btn-light"
+                                        (click)="saveControl('price')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                             class="bi bi-floppy-fill" viewBox="0 0 16 16">
                                             <path
@@ -245,11 +257,11 @@
                         </div>
                         <div class="mt-2">
                             <div
-                                *ngIf="(this.productForm.get('precio').hasError('required') && data.showEditIcon) || 
-                        (this.productForm.get('precio').hasError('required') && this.productForm.get('precio').touched && data.showEditIcon == false)">
+                                *ngIf="(this.productForm.get('price').hasError('required') && data.showEditIcon) || 
+                        (this.productForm.get('price').hasError('required') && this.productForm.get('price').touched && data.showEditIcon == false)">
                                 <p class="text-danger h6"> Este campo es obligatorio </p>
                             </div>
-                            <div *ngIf="this.productForm.get('precio').hasError('pattern')">
+                            <div *ngIf="this.productForm.get('price').hasError('pattern')">
                                 <p class="text-danger h6"> Ingrese un precio valido </p>
                             </div>
                         </div>
