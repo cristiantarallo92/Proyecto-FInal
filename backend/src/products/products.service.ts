@@ -68,8 +68,22 @@ export class ProductsService {
       );
     }
 
-    const product = this.productRepository.create(createProductDto);
-    return await this.productRepository.save(product);
+    const product = this.productRepository.create({
+      ...createProductDto,
+      brand: { id: createProductDto.brandId },
+      category: { id: createProductDto.categoryId },
+    });
+    
+    const savedProduct = await this.productRepository.save(product);
+    return {
+      id: savedProduct.id,
+      name: savedProduct.name,
+      description: savedProduct.description,
+      price: savedProduct.price,
+      stock: savedProduct.stock,
+      brandId: savedProduct.brand.id,
+      categoryId: savedProduct.category.id,
+    };
   }
 
   async update(
