@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ProductServ } from '../Models/product-service.model';
+import { ProductServ } from '../Models/product-service.model'
 import { ProductModel } from '../Models/product.model';
 import axios from 'axios';
 import { environment } from 'src/environments/environment';
