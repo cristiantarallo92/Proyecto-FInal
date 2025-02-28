@@ -9,7 +9,7 @@ import { CategoryService } from 'src/app/Services/category.service';
 import { ProductService } from 'src/app/Services/product.service'; 
 
 import { Input } from 'src/app/Models/input.model'; 
-import { Product } from 'src/app/Models/product.model'; 
+import { ProductModel } from 'src/app/Models/product.model'; 
 import { Brand } from 'src/app/Models/brand.model';
 import { Category } from '../../../Models/category.model';
 
@@ -22,14 +22,14 @@ import { Category } from '../../../Models/category.model';
 })
 export class InfoProductosComponent implements OnInit {
     
-    product = new Product();
+    product = new ProductModel();
     productForm: FormGroup = new FormGroup({
         name: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]),
         description: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]),
         category: new FormControl('', [Validators.required]),
         brand: new FormControl('', [Validators.required]),
-        stock: new FormControl('', [Validators.required, Validators.pattern(/^-?\d*\.?\d+$/)]),
-        price: new FormControl('', [Validators.required, Validators.pattern(/^-?\d*\.?\d+$/)])
+        stock: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/)]),
+        price: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d+)?$/)]) 
     });
     brands: Brand[];
     categories: Category[];
@@ -163,46 +163,60 @@ export class InfoProductosComponent implements OnInit {
     getInputIndex(): number {
         return this.formInputs.findIndex(inp => inp.editMode == false);
     }
+    
+    getCategory( category:string ){                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         console.log("category desc",category)
+    return this.categories.find( ( { name } ) => name === category)
+    }
+
+    getBrand( brand:string ): Brand {
+    return this.brands.find( ( { name } ) => name === brand )
+    }
 
     getFormsValues():void {
         this.product.name = this.productForm.controls['name'].value;
         this.product.description = this.productForm.controls['description'].value;
-        this.product.category = this.productForm.controls['category'].value;
-        this.product.brand = this.productForm.controls['brand'].value;
+        this.product.category = this.getCategory(this.productForm.controls['category'].value)
+        this.product.brand = this.getBrand(this.productForm.controls['brand'].value)
         this.product.stock = this.productForm.controls['stock'].value;
-        this.product.price = this.productForm.controls['price'].value;
-        console.log("PRODUCTO !! - ", this.product)
+        this.product.price =  this.convertPrice(this.productForm.controls['price'].value);
+
+        console.log("PRODUCTO -- !!", this.product)
+    }
+    
+    convertPrice( price:number ){
+    return parseFloat((price.toString()).replace(",","."));
     }
 
-    saveModal() {
-    if (this.getInputIndex() == -1) {
-        this.getFormsValues();
-        if( this.data.showEditIcon) {
-                console.log("EDITA PROD")
-                this.productService.editProduct(this.product.id, this.product ).then( ( res )=> {
-                   if(res.status == 200 ){
-                    window.alert("Producto editado correctamente. ");
-                    this.dialogRef.close();
-                     }  
-                }).catch ( ( err )=> {
-                    console.log("err", err)
-                    window.alert("ERROR - No pudo completarse la edicion del producto. Por favor intente nuevamente en unos minutos ...");
-                    this.dialogRef.close();
-                })
-            } else {
-                this.dialog.open(CancelEditionComponent, { disableClose: true })
-            }       
+    saveModal() { 
+      this.getFormsValues()  
+      if(this.data.showEditIcon){
+        if (this.getInputIndex() == -1) {
+        this.productService.editProduct(this.product.id, this.product ).then( ( res )=> {
+                if(res.status == 200 ){
+                 window.alert("Producto editado correctamente. ");
+                 this.dialogRef.close();
+                  }  
+             }).catch ( ( err )=> {
+                 console.log("err", err)
+                 window.alert("ERROR - No pudo completarse la edicion del producto. Por favor intente nuevamente en unos minutos ...");
+                 this.dialogRef.close();
+             })
         } else {
-            this.productService.addProduct(this.product).then( ( res ) => {
-                if(res.status == 200 ) {
-                    window.alert("Producto agregado correctamente. ");
-                    this.dialogRef.close();
-                }  
-            }).catch( ( err ) => {
-                window.alert("ERROR - No pudo agregar el producto. Por favor intente nuevamente en unos minutos ...");
+        this.dialog.open(CancelEditionComponent, { disableClose: true })
+        }
+      } else {
+        console.log("SAVE MODAL PRODUDCT - ", this.product)
+        this.productService.addProduct(this.product).then( (res) =>{
+            if(res.status = 201){
+                window.alert("Producto creado correctamente. ");
                 this.dialogRef.close();
-            })
-        }       
+            }
+        }).catch( (err)=> {
+            console.log("err", err)
+            window.alert("ERROR - No pudo agregar el producto. Por favor intente nuevamente en unos minutos ...");
+            this.dialogRef.close(); 
+        }) 
+      } 
     }
 
     cancelModal() {
@@ -210,6 +224,7 @@ export class InfoProductosComponent implements OnInit {
             this.dialogRef.close()
         } else {
             this.dialog.open(CancelEditionComponent, { disableClose: true })
-        }
+        } 
     }
+    
 }

@@ -53,16 +53,8 @@
                     </tr>
                 </thead>  
                 <tbody>
-                    <!-- 
-                    <tr class="mh-100" *ngIf="(productos|filtroProducto:parametros:pagina).length === 0">
-                        <td colspan="8"  class="border border-0">
-                            
-
-                        </td>
-                    </tr>
-                    -->
                     <tr *ngFor="let p of products">
-                        <td class="align-middle"> {{p.name}} </td>
+                        <td class="align-middle"> {{p.name}} </td> 
                         <td class="align-middle"> {{p.brand.name}} </td>
                         <td class="align-middle"> {{p.category.name}} </td>
                         <td class="align-middle"> {{p.price}} </td>

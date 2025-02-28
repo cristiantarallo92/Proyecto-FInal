@@ -1,0 +1,14 @@
+/products?quickSearch="no frost"v
+
+
+POST /products
+{
+	"name": "lavavajilla pro max",
+	"descripcion":"lava mejor que el normal",
+	"categoryId": 1,
+	"brandId": 2,
+	"price": 1.500.000
+	"stock": 5
+}
+
+/products?quickSearch="no frost"&categoryId=2&brandId=3

@@ -3,3 +3,4 @@ export class ProductFilter {
     category:    string;
     brand:        string; 
 }
+

@@ -4,7 +4,7 @@ export class ModalData {
     modalData:    any;
    // collection:   Object[];
 
-     constructor(modalText: string, modalMode: boolean, modalData: any){
+  constructor(modalText: string, modalMode: boolean, modalData: any){
         this.modalText = modalText;
         this.modalMode = modalMode;
         this.modalData = modalData;
