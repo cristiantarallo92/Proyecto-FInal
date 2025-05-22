@@ -3,6 +3,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import {  Observable  }  from  'rxjs'
+import { HttpClientModule }  from '@angular/common/http';
 
 import { MatDialogModule } from '@angular/material/dialog';
 
@@ -74,7 +75,8 @@ import { PersonFilterPipe } from './Pipes/person-filter.pipe';
     MatInputModule ,
     MatButtonModule,
     MatTableModule,
-    FormsModule  
+    FormsModule,
+    HttpClientModule  
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core'
-import { Category } from '../Models/category.model';
+import { CategoryModel } from '../Models/category.model';
 
 @Pipe({
   name: 'categoryFilter'
@@ -7,7 +7,7 @@ import { Category } from '../Models/category.model';
 
 export class FilterCategory implements PipeTransform {
 
-    transform(categories: Category[], categorySearched:any, page:number = 0): any {
+    transform(categories: CategoryModel[], categorySearched:any, page:number = 0): any {
         console.log("items", categories)
         console.log("parametro",  categorySearched)
         console.log("pagina", page)

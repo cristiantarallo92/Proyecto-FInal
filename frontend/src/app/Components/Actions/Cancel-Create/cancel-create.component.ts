@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject} from '@angular/core';
 import { MatDialog,MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ModalData } from 'src/app/Models/modalData.model';
+import { ModalData } from 'src/app/Models/modal-data.model';
 
 @Component({
   selector: 'app-cancel-create',
@@ -9,13 +9,12 @@ import { ModalData } from 'src/app/Models/modalData.model';
 })
 export class CancelCreateComponent implements OnInit {
 
-  constructor(public matDialog:MatDialogRef<CancelCreateComponent>,   @Inject(MAT_DIALOG_DATA) public data:ModalData) { }
+  constructor(public matDialog:MatDialogRef<CancelCreateComponent>,   @Inject(MAT_DIALOG_DATA) public modal:ModalData) { }
 
 
 
   ngOnInit(): void {
-      console.log("Cancel create", this.data)
-      console.log(this.data.modalData)
+      console.log("Cancel create", )
   }
 
   closeModal(): void{

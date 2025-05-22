@@ -2,13 +2,13 @@
     <div class="row" >
         <div class="col-12" >
            <h3  class="navbar navbar-dark bg-dark text-light p-2">
-           {{data.modalText}}
+           {{ modal.modalTitle }}
            </h3>
         </div>
         <div class="col-12 p-1 d-flex justify-content-center" >
          <p class="fs-5 p-2" >
-            Desea eliminar el siguiente producto: 
-            <strong> {{data.modalData.name}} </strong> ?
+            Desea eliminar - {{ modal.modalItem }} : 
+            <strong> {{ deletedElement }} </strong> ?
          </p> 
         </div>
         <div class="col-12 d-flex justify-content-end p-2">

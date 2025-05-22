@@ -49,10 +49,10 @@
                       <th scope="col"> Categoria </th>
                       <th scope="col"> Precio </th>
                       <th scope="col"> Stock </th>
-                      <th scope="col"> </th>
+                      <th scope="col"> Opciones </th>
                     </tr>
                 </thead>  
-                <tbody>
+                <tbody> 
                     <tr *ngFor="let p of products">
                         <td class="align-middle"> {{p.name}} </td> 
                         <td class="align-middle"> {{p.brand.name}} </td>
@@ -73,9 +73,16 @@
                             </div>
                         </td>
                     </tr>
+                    <tr *ngIf="products?.length == 0">
+                        <td colspan="6">
+                            <app-noresults [item]="this.message" [icon]="this.productIcon" > </app-noresults>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
+    </div>
+    <div class="row">
         <div class="col-12 d-flex justify-content-between">
             <button class="btn btn-dark" (click)="changePreviusPage()"> Pagina Anterior </button>
             <button class="btn btn-dark" (click)="changeNextPage()"> Pagina Siguiente </button>

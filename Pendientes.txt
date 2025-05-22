@@ -1,0 +1,27 @@
+Modulo Productos:
+
+(lista-productos)
+.  El NotFoundComponent (cuando se filtra un producto y no se encuentran resultados con los datos filtrados) tiene que centrarse mejor.
+.  Agregar un manejador de errorespara observables.
+.  Agregar paginacion para productos
+.  Agregar tipado para creacion y edicion de productos.
+   _ Agregar / Editar --> . Nombre modal
+                          . Modo edicion
+.  Agregar tipado para borrado de productos.
+   _ Borrar --> . Nombre modal
+                . Modo modal
+                . Data producto
+                . Tipo data ´producto´
+.  Al tocar la opcion de editar producto se abre el modal en modo 'Edicion' y aparecen los filtros de categoriay marca con valores cargados.
+
+(info-productos)
+.  Cuando se abre el modal en modo 'Edicion' se muyestran los datos del productos y si se toca guardar, vuelve a grabar los mismos datos del producto sin haber hecho cambios.
+.  Cuando se abre el modal en modo 'Agregar producto' y si se cancela la accion se muestran los campos que piden agregar un valor cuandpo se esta saliendo del modal.
+.  Obtener info de categoria y marca usando el service
+
+
+Dudas:
+.  Conviene tener cada model dentro de su componente? Los modals de producto dentro de productos, los modal de categorias con los de categoria y asi.
+.  Hablar con piru por el tema de observables.
+
+

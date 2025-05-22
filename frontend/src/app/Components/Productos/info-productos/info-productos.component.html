@@ -2,7 +2,7 @@
     <div class="row">
         <div class="col-12">
             <h3 class="navbar navbar-dark bg-dark text-light p-3">
-                {{data.titleName}}
+                {{modal.modalTitle}}
             </h3>
         </div>
     </div>
@@ -18,7 +18,7 @@
                             <div class="d-flex flex-row">
                                 <input type="text" class="form-control me-2" id="name" placeholder="Ingrese Produto"
                                     formControlName="name" required>
-                                <div *ngIf="data.showEditIcon">
+                                <div *ngIf="modal.modalMode">
                                     <ng-container *ngIf="formInputs[0].editMode">
                                         <button class="btn btn-light" (click)="editControl('name')" type="submit">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -44,8 +44,8 @@
                             </div>
                             <div class="mt-2">
                                 <div
-                                    *ngIf="(this.productForm.get('name').hasError('required') && data.showEditIcon) || 
-                        (this.productForm.get('name').hasError('required') && this.productForm.get('name').touched && data.showEditIcon == false)">
+                                    *ngIf="( ( (this.productForm.get('name').hasError('required') && modal.modalMode) || (this.productForm.get('name').hasError('required') && this.productForm.get('name').touched && modal.modalMode == false) ) 
+                                                && this.emptyForm) ">
                                     <p class="text-danger h6"> Este campo es obligatorio </p>
                                 </div>
                                 <div
@@ -54,7 +54,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>  
                 </div>
                 <div class="col-12 d-flex flex-row">
                     <div class="col-12 mt-3 d-flex flex-column">
@@ -65,7 +65,7 @@
                             <div class="d-flex">
                                 <input type="text" class="form-control me-2" id="description"
                                     placeholder="Ingrese una description" formControlName="description" required>
-                                <div *ngIf="data.showEditIcon">
+                                <div *ngIf="modal.modalMode">
                                     <ng-container *ngIf="formInputs[1].editMode">
                                         <button class="btn btn-light" (click)="editControl('description')" type="submit">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -91,8 +91,8 @@
                             </div>
                             <div class="mt-2">
                                 <div
-                                    *ngIf="(this.productForm.get('description').hasError('required') && data.showEditIcon) || 
-                        (this.productForm.get('description').hasError('required') && this.productForm.get('name').touched && data.showEditIcon == false)">
+                                    *ngIf="( ( (this.productForm.get('description').hasError('required') && modal.modalMode ) || (this.productForm.get('description').hasError('required') && this.productForm.get('name').touched &&modal.modalMode == false) )
+                                                && this.emptyForm )">
                                     <p class="text-danger h6"> Este campo es obligatorio </p>
                                 </div>
                                 <div
@@ -101,7 +101,7 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> 
                 </div>
                 <div class="col-12  d-flex flex-row">
                     <div class="col-6  mt-3 p-1 d-flex flex-column"> 
@@ -110,11 +110,11 @@
                         </div>
                         <div class="d-flex">
                             <select id="inputState" class="form-select me-2" formControlName="category">
-                                <option *ngIf="!data.showEditIcon" hidden selected> Seleccione una categoria </option>
-                                <option *ngIf="data.showEditIcon" hidden selected> {{ this.productForm.controls['category'].value }} </option> 
+                                <option *ngIf="!modal.modalMode" hidden selected> Seleccione una categoria </option>
+                                <option *ngIf="modal.modalMode" hidden selected> {{ this.productForm.controls['category'].value }} </option> 
                                 <option *ngFor="let c of categories"> {{c.name}} </option>
                             </select>
-                            <div *ngIf="data.showEditIcon">
+                            <div *ngIf="modal.modalMode">
                                 <ng-container *ngIf="formInputs[2].editMode">
                                     <button class="btn btn-light" (click)="editControl('category')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -139,7 +139,7 @@
                         </div>
                         <div class="mt-2">
                             <div
-                                *ngIf="(this.productForm.get('category').hasError('required') && this.productForm.get('category').touched && data.showEditIcon == false)">
+                                *ngIf="(this.productForm.get('category').hasError('required') && this.productForm.get('category').touched && modal.modalMode == false)">
                                 <p class="text-danger h6"> Necesita asignar una categoria al producto </p>
                             </div>
                         </div>
@@ -150,11 +150,11 @@
                         </div>
                         <div class="d-flex">
                             <select id="inputState" class="form-select me-2" formControlName="brand">
-                                <option *ngIf="!data.showEditIcon" hidden selected> Seleccione una marca </option>
-                                <option *ngIf="data.showEditIcon"> {{ this.productForm.controls['brand'].value }}</option>
+                                <option *ngIf="!modal.modalMode" hidden selected> Seleccione una marca </option>
+                                <option *ngIf="modal.modalMode"> {{ this.productForm.controls['brand'].value }}</option>
                                 <option *ngFor="let b of brands"> {{b.name}} </option>
                             </select>
-                            <div *ngIf="data.showEditIcon">
+                            <div *ngIf="modal.modalMode">
                                 <ng-container *ngIf="formInputs[3].editMode">
                                     <button class="btn btn-light" (click)="editControl('brand')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -179,7 +179,7 @@
                         </div>
                         <div class="mt-2">
                             <div
-                                *ngIf="(this.productForm.get('brand').hasError('required') && this.productForm.get('brand').touched && data.showEditIcon == false)">
+                                *ngIf="(this.productForm.get('brand').hasError('required') && this.productForm.get('brand').touched && modal.modalMode == false)">
                                 <p class="text-danger h6"> Necesita asignar una marca al producto </p>
                             </div>
                         </div>
@@ -191,7 +191,7 @@
                         <div class="d-flex">
                             <input type="number" class="form-control me-2" id="exampleFormControlInput1"
                                 placeholder="Ingrese stock del producto" formControlName="stock">
-                            <div *ngIf="data.showEditIcon">
+                            <div *ngIf="modal.modalMode">
                                 <ng-container *ngIf="formInputs[4].editMode">
                                     <button class="btn btn-light" (click)="editControl('stock')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -217,8 +217,7 @@
                         </div>
                         <div class="mt-2">
                             <div
-                                *ngIf="(this.productForm.get('stock').hasError('required') && data.showEditIcon) || 
-                        (this.productForm.get('stock').hasError('required') && this.productForm.get('stock').touched && data.showEditIcon == false)">
+                                *ngIf="( ( this.productForm.get('stock').hasError('required') && modal.modalMode) || (this.productForm.get('stock').hasError('required') && this.productForm.get('stock').touched && modal.modalMode == false) )  && this.emptyForm ">
                                 <p class="text-danger h6"> Este campo es obligatorio </p>
                             </div>
                             <div *ngIf="this.productForm.get('stock').hasError('pattern')">
@@ -231,7 +230,7 @@
                         <div class="d-flex">
                             <input type="number" class="form-control me-2" id="exampleFormControlInput1"
                                 placeholder="Ingrese precio del producto" formControlName="price">
-                            <div *ngIf="data.showEditIcon">
+                            <div *ngIf="modal.modalMode">
                                 <ng-container *ngIf="formInputs[5].editMode">
                                     <button class="btn btn-light" (click)="editControl('price')">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -257,8 +256,7 @@
                         </div>
                         <div class="mt-2">
                             <div
-                                *ngIf="(this.productForm.get('price').hasError('required') && data.showEditIcon) || 
-                        (this.productForm.get('price').hasError('required') && this.productForm.get('price').touched && data.showEditIcon == false)">
+                                *ngIf="( (this.productForm.get('price').hasError('required') && modal.modalMode) || (this.productForm.get('price').hasError('required') && this.productForm.get('price').touched && modal.modalMode == false) )  && this.emptyForm ">
                                 <p class="text-danger h6"> Este campo es obligatorio </p>
                             </div>
                             <div *ngIf="this.productForm.get('price').hasError('pattern')">
@@ -267,15 +265,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-12 d-flex justify-content-center">
-                    <div class="mt-3" mat-dialog-actions>
-                        <button class="btn btn-dark" type="submit" mat-raised-button 
-                            [disabled]="this.productForm.invalid"  (click)="saveModal()" > Guardar </button>
-                        <button class="btn btn-dark" type="submit" mat-raised-button (click)="cancelModal()"> Cancelar </button>
-                    </div>
-                </div>
             </form>    
         </div>
     </div>
+    <div class="row">
+        <div class="col-12 d-flex justify-content-center">
+            <div class="mt-3" mat-dialog-actions>
+                <button class="btn btn-dark" type="submit" mat-raised-button 
+                    [disabled]="this.productForm.invalid"  (click)="saveModal()" > Guardar </button>
+                <button class="btn btn-dark" type="submit" mat-raised-button (click)="cancelModal()"> Cancelar </button>
+            </div>
+        </div>
+    </div>    
 </div>
     

@@ -1,9 +1,9 @@
 import { Component, OnInit, Inject} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { Category } from 'src/app/Models/category.model';
+import { CategoryModel } from 'src/app/Models/category.model';
 import { Input } from 'src/app/Models/input.model';
-import { ModalData } from 'src/app/Models/modalData.model';
+import { ModalData } from 'src/app/Models/modal-data.model';
 import { CancelEditionComponent } from '../../Actions/Cancel-Edition/cancel-edition.component';
 import { CancelCreateComponent } from '../../Actions/Cancel-Create/cancel-create.component';
 
@@ -22,48 +22,42 @@ export class InfoCategoriasComponent implements OnInit {
    this.configModal()
   } 
 
-  constructor(private dialog: MatDialog, public dialogRef: MatDialogRef<InfoCategoriasComponent>, @Inject(MAT_DIALOG_DATA) public modal: ModalData, private fb: FormBuilder) {
+  constructor(private dialog: MatDialog, public dialogRef: MatDialogRef<InfoCategoriasComponent>, @Inject(MAT_DIALOG_DATA) public modal: any, private fb: FormBuilder) {
       console.log("CONSTRUCTOR", modal)
    }
 
   categoryForm: FormGroup = new FormGroup({
-    categoryName: new FormControl('', [Validators.required,Validators.minLength(5),Validators.maxLength(15),Validators.pattern(/^(?!\s*$).+/)]),
-    categoryDescription: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(50),Validators.pattern(/^(?!\s*$).+/)]),
-    availability: new FormControl('', [Validators.required])});
+    categoryName: new FormControl('', [Validators.required,Validators.minLength(5),Validators.maxLength(50),Validators.pattern(/^(?!\s*$).+/)]),
+  });
 
-  ncategory = new Category();  
-  categoryEdited = new Category();
+  ncategory = new CategoryModel();  
+  categoryEdited = new CategoryModel();
+  emptyForm: boolean;
   formInputs: Input []  = [{
     inputName: 'categoryName',
     editMode: true,
     saveMode: false},
-    {
-    inputName: 'categoryDescription',
-    editMode: true,
-    saveMode: false},
-    {
-    inputName: 'availability',
-    editMode: true,
-    saveMode: false},
-] // Validators.pattern(/^(?!\s*$).+/)]
+] 
     
     configModal() {
         if(this.modal.modalMode) {
-        this.categoryForm.controls['categoryName'].setValue(this.modal.modalData['categoryName']);
-        this.categoryForm.controls['categoryDescription'].setValue(this.modal.modalData['categoryDescription']);
-        this.categoryForm.controls['availability'].setValue(this.modal.modalData['availability']);
+        this.categoryForm.controls['categoryName'].setValue(this.modal.modalData['name']);
+        //this.categoryForm.controls['categoryDescription'].setValue(this.modal.modalData['categoryDescription']);
+        //this.categoryForm.controls['availability'].setValue(this.modal.modalData['availability']);
         this.disabledInputs()
        }
     }
 
     disabledInputs(){ 
         this.categoryForm.controls['categoryName'].disable();
-        this.categoryForm.controls['categoryDescription'].disable();
-        this.categoryForm.controls['availability'].disable();
+        //this.categoryForm.controls['categoryDescription'].disable();
+        //this.categoryForm.controls['availability'].disable();
     }
 
     editControl(input: string): void {
+        console.log("INPUT",input)
         const index = this.getInputActive(input)
+        console.log("INDEX",index)
         if (this.getInputIndex() !== -1) {
             this.dialog.open(CancelEditionComponent, { disableClose: true })
         } else {
@@ -111,12 +105,20 @@ export class InfoCategoriasComponent implements OnInit {
     }  
 
     cancelModal(){
- 
-      if (!this.modal.modalMode) {
+    this.emptyForm =  Object.values(this.categoryForm.value).every(value => value === '' || value === null || value == 0) 
+    
+    if( (this.getInputIndex() == -1 && this.emptyForm && this.modal.modalMode == false ) || (this.getInputIndex() == -1 && this.emptyForm  == false && this.modal.modalMode ) ) {
+        this.dialogRef.close();
+        } else {
+        this.dialog.open(CancelEditionComponent, { disableClose: true })
+        }  
+    }
+     
+   /*   if (!this.modal.modalMode) {
           if (Object.values(this.categoryForm.value).filter( value => (value !==  '' || /^(?!\s*$).+/.test(value) ) ).length == 0) {
-                this.dialogRef.close()
+            
           } else {
-            const modal = new ModalData('Cancelar - Alta Categoria', false, {text: 'Categoria'})  
+           const modal = new ModalData('Cancelar - Alta Categoria', false, {text: 'Categoria'})  
             const dialog = this.dialog.open(CancelCreateComponent, {
             disableClose: true,
             data: modal
@@ -126,20 +128,11 @@ export class InfoCategoriasComponent implements OnInit {
                this.dialogRef.close()    
                } 
             }) 
-        }
-      }
+        }  
+      } */
+    }  
     
-      if(this.modal.modalMode){
-        if(this.getInputIndex() == -1 ){
-        this.dialogRef.close()
-         } else  {
-           this.dialog.open(CancelEditionComponent, { disableClose: true })
-           }
-        }
-    }
 
-} 
- 
 
 
 

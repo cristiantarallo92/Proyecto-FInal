@@ -1,13 +1,13 @@
-import { Brand } from "./brand.model";
-import { Category } from "./category.model";
+import { BrandModel } from "./brand.model";
+import { CategoryModel } from "./category.model";
 
 
 export class ProductModel {
     id:           number;
-    name:  string;
+    name:         string;
     description:  string;
-    brand: Brand;
-    category:  Category;
-    price:       number;
+    brand:        BrandModel;
+    category:     CategoryModel;
+    price:        number;
     stock:        number;
 }

@@ -1,5 +1,6 @@
 
 export class ProductServ {
+    id; number;
     name:  string;
     description:  string;
     brandId: number;

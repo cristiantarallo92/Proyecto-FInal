@@ -10,18 +10,17 @@ import { ProductService } from 'src/app/Services/product.service';
 
 import { Input } from 'src/app/Models/input.model'; 
 import { ProductModel } from 'src/app/Models/product.model'; 
-import { Brand } from 'src/app/Models/brand.model';
-import { Category } from '../../../Models/category.model';
-
-
-
+import { BrandModel } from 'src/app/Models/brand.model';
+import { CategoryModel } from '../../../Models/category.model';
+import * as  _ from "lodash";
+import { ModalData } from 'src/app/Models/modal-data.model';
 @Component({
     selector: 'app-info-productos',
     templateUrl: './info-productos.component.html',
     styleUrls: ['./info-productos.component.css']
 })
+
 export class InfoProductosComponent implements OnInit {
-    
     product = new ProductModel();
     productForm: FormGroup = new FormGroup({
         name: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(50)]),
@@ -31,8 +30,9 @@ export class InfoProductosComponent implements OnInit {
         stock: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/)]),
         price: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d+)?$/)]) 
     });
-    brands: Brand[];
-    categories: Category[];
+    brands: BrandModel[];
+    categories: CategoryModel[];
+    emptyForm: boolean;
     formInputs: Input [] = [{
         inputName: 'name',
         editMode: true,
@@ -64,38 +64,41 @@ export class InfoProductosComponent implements OnInit {
         saveMode: false
     }]
    
-
     constructor(private brandService: BrandService,
                 private categoryService: CategoryService, 
                 private productService: ProductService,
                 private dialog: MatDialog,
-                public dialogRef: MatDialogRef<InfoProductosComponent>, @Inject(MAT_DIALOG_DATA) public data: any
+                public dialogRef: MatDialogRef<InfoProductosComponent>, @Inject(MAT_DIALOG_DATA) public modal: ModalData
     ) { }
 
-    ngOnInit(): void {
-        this.brandService.getBrands().then( ( res ) => {
-            this.brands  = res.data 
-            console.log("Braandss  - ", this.brands)
-        })
-        this.categoryService.getCategories().then( ( res ) => {
-            this.categories  = res.data  
-            console.log("categories  - ", this.categories)
-        })  
-        console.log("MODAL  -  " , this.data)
-        this.configModal();
+    ngOnInit(): void { 
+        this.brandService.getBrands().subscribe(
+            respond => {   
+            this.brands = respond 
+            } , 
+            error => {
+            }
+        ) 
+        this.categoryService.getCategories().subscribe(
+            respond => {  
+            this.categories = respond
+            } ,
+            error => {
+            }
+        ) 
+        this.configModal(); 
+        console.log("modAL",    this.modal)
     }
 
     configModal(): void {
-        if (this.data.showEditIcon == true) {
-            this.product = this.data.product;
-            console.log("product", this.product)
-            console.log("data.product", this.data.product)
-            this.productForm.controls['name'].setValue(this.product.name);
-            this.productForm.controls['description'].setValue(this.product.description);
-            this.productForm.controls['category'].setValue(this.product.category.name);
-            this.productForm.controls['brand'].setValue(this.product.brand.name);
-            this.productForm.controls['stock'].setValue(this.product.stock);
-            this.productForm.controls['price'].setValue(this.product.price);
+        if (this.modal.modalMode) {
+          //  this.product = this.modal.modalData;
+            this.productForm.controls['name'].setValue(this.modal.modalData['name']);
+            this.productForm.controls['description'].setValue(this.modal.modalData['description']);
+            this.productForm.controls['category'].setValue(this.modal.modalData['category']);
+            this.productForm.controls['brand'].setValue(this.modal.modalData['brand']);
+            this.productForm.controls['stock'].setValue(this.modal.modalData['stock']);
+            this.productForm.controls['price'].setValue(this.modal.modalData['price']);
             this.disabledInput();
         }
     }
@@ -111,7 +114,6 @@ export class InfoProductosComponent implements OnInit {
     }
 
     configInput(input: string): void {
-        console.log("configInput", input)
         switch (input) {
             case 'name':
                // this.productForm.controls[`${input}`].setValue(this.product.productName);
@@ -168,63 +170,92 @@ export class InfoProductosComponent implements OnInit {
     return this.categories.find( ( { name } ) => name === category)
     }
 
-    getBrand( brand:string ): Brand {
+    getBrand( brand:string ): BrandModel {
     return this.brands.find( ( { name } ) => name === brand )
     }
-
+   
     getFormsValues():void {
-        this.product.name = this.productForm.controls['name'].value;
-        this.product.description = this.productForm.controls['description'].value;
+        const productName: string = this.productForm.controls['name'].value;
+        const productDescription: string  = this.productForm.controls['description'].value;
+        this.product.name  = productName.trim()
+        this.product.description = productDescription.trim()
         this.product.category = this.getCategory(this.productForm.controls['category'].value)
-        this.product.brand = this.getBrand(this.productForm.controls['brand'].value)
-        this.product.stock = this.productForm.controls['stock'].value;
-        this.product.price =  this.convertPrice(this.productForm.controls['price'].value);
-
-        console.log("PRODUCTO -- !!", this.product)
+        this.product.brand = this.getBrand(this.productForm.controls['brand'].value) 
+        this.product.stock =  this.convertStock(this.productForm.controls['stock'].value);
+        this.product.price =  this.convertPrice(this.productForm.controls['price'].value) 
+        console.log("form values", this.product)
     }
     
-    convertPrice( price:number ){
-    return parseFloat((price.toString()).replace(",","."));
+    convertPrice( price:any ) : number {
+        if (price === null || price === undefined || price.toString().trim() === '') {
+            return 0; }
+        const normalizedPrice = price.toString().replace(',', '.'); 
+        const parsed = parseFloat(normalizedPrice);
+        if (isNaN(parsed)) {
+            return 0; }
+        return parsed;
+  //  return parseFloat((price.toString()).replace(",","."));  }
     }
 
-    saveModal() { 
-      this.getFormsValues()  
-      if(this.data.showEditIcon){
-        if (this.getInputIndex() == -1) {
-        this.productService.editProduct(this.product.id, this.product ).then( ( res )=> {
-                if(res.status == 200 ){
-                 window.alert("Producto editado correctamente. ");
-                 this.dialogRef.close();
-                  }  
-             }).catch ( ( err )=> {
-                 console.log("err", err)
-                 window.alert("ERROR - No pudo completarse la edicion del producto. Por favor intente nuevamente en unos minutos ...");
-                 this.dialogRef.close();
-             })
+    convertStock( stock:number ): number {
+        if( stock === undefined || stock == null  || stock.toString().trim() === '' )  {
+            return 0;
+        } else { 
+            return stock;
+        }
+    }
+
+    saveModal() {  
+        const product = { id: this.product.id, 
+            name: this.product.name,
+            description: this.product.description,
+            brand: this.product.brand,
+            category: this.product.category,
+            price: this.convertPrice(this.product.price),
+            stock: this.product.stock}   
+        this.getFormsValues();
+        if(this.modal.modalMode){
+        if (this.getInputIndex() == -1  ) { 
+            if( _.isEqual(product, this.product) ) {
+                this.dialogRef.close();  
+            } else { 
+            this.productService.editProduct(this.product.id, this.product).subscribe(
+                res => {
+                window.alert("Producto editado correctamente. ");
+                this.dialogRef.close();
+                } , 
+                err => {
+                console.log("err", err);
+                window.alert("ERROR - No pudo completarse la edicion del producto. Por favor intente nuevamente en unos minutos ...");
+                this.dialogRef.close();
+                }
+            ) }
         } else {
         this.dialog.open(CancelEditionComponent, { disableClose: true })
         }
       } else {
-        console.log("SAVE MODAL PRODUDCT - ", this.product)
-        this.productService.addProduct(this.product).then( (res) =>{
-            if(res.status = 201){
+        this.productService.addProduct(this.product).subscribe(
+                () => {
+
                 window.alert("Producto creado correctamente. ");
                 this.dialogRef.close();
-            }
-        }).catch( (err)=> {
-            console.log("err", err)
-            window.alert("ERROR - No pudo agregar el producto. Por favor intente nuevamente en unos minutos ...");
-            this.dialogRef.close(); 
-        }) 
-      } 
+                },
+                error  => {
+                    console.log("Error - ", error)
+                    window.alert("ERROR - No pudo agregar el producto. Por favor intente nuevamente en unos minutos ...");
+                    this.dialogRef.close();  
+                }
+              );
+        } 
     }
 
-    cancelModal() {
-        if (this.getInputIndex() == -1) {
-            this.dialogRef.close()
+    cancelModal(): void {
+    this.emptyForm =  Object.values(this.productForm.value).every(value => value === '' || value === null || value == 0) 
+    if( (this.getInputIndex() == -1 && this.emptyForm &&this.modal.modalMode == false ) || (this.getInputIndex() == -1 && this.emptyForm  == false && this.modal.modalMode ) ) {
+        this.dialogRef.close();
         } else {
             this.dialog.open(CancelEditionComponent, { disableClose: true })
-        } 
+        }  
     }
     
 }

@@ -1,0 +1,5 @@
+. Para comparar objetos: 
+  https://github.com/DefinitelyTyped/DefinitelyTyped/issues/69932
+  _ Instalar con el comando: npm install @types/lodash@4.17.5
+. Pasar datos de componete padre a hijo / hijo a padre:
+  https://www.webtutoriales.com/articulos/2025/01/07/pasar-informacion-componente-padre-hijo-angular/

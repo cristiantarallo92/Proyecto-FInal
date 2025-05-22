@@ -1,4 +1,3 @@
-<!--  
 <div class="container">
     <div class="row">
         <div class="col-12">
@@ -7,12 +6,11 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <form   [formGroup]="categorySearchForm" class="d-flex flex-row p-3 mb-2 bg-dark text-white justify-content-end"
-             (click)="searchCategory()">
+            <form   [formGroup]="filterCategoryForm" class="d-flex flex-row p-3 mb-2 bg-dark text-white justify-content-end" (click)="searchCategory()">
                 <button class="btn btn-outline-light m-1" type="submit" (click)="addCategory()"> Agregar Categoria </button>
                 <input class="form-control w-25 m-1" type="search" placeholder="Categoria" aria-label="Buscar"  formControlName="category">  
                 <button class="btn btn-outline-light m-1"> Buscar </button>    
-                <ng-container *ngIf="categorySearchForm.value['categoria'] == null">
+                <ng-container *ngIf="filterCategoryForm.value['categoria'] == null">
                 <button class="btn btn-outline-light m-1" (click)="removeCategoryFilter()"> Borrar Filtro </button>
                 </ng-container>
              </form>
@@ -20,28 +18,23 @@
     </div>
     <div class="row">
         <div class="col-12"> 
-            <div class="tableContent">
                 <table class="table table-hover table-fixed mt-2 text-center p-5" >
                     <thead class="table-dark"> 
                       <tr>
-                        <th scope="col"> # </th>
-                        <th scope="col"> Nombre Categoria </th>
-                        <th scope="col"> Descripcion </th>
-                        <th scope="col"> Estado </th>
-                        <th scope="col"> </th>
+                        <th> </th>
+                        <th scope="col"> Descripcion Categoria </th>
+                        <th scope="col"> Opciones </th>
                       </tr>
                     </thead>  
                     <tbody>  
-                            <tr class="mh-100" *ngIf="(categories|categoryFilter:categorySearch:page).length === 0">
+                            <tr class="mh-100" *ngIf="categories?.length == 0">
                                 <td  colspan="8"  class="border border-0" >  
                                     <app-noresults  [item]="'Categorias'" [icon]="categoryIcon"> </app-noresults>
                                 </td>  
                             </tr>
-                            <tr *ngFor="let c of categories|categoryFilter:categorySearch:page, index as i" > 
-                                <th scope="row"> {{i+1}} </th>
-                                <td> {{c.categoryName}} </td>
-                                <td> {{c.categoryDescription}} </td>
-                                <td> {{c.availability}} </td>
+                            <tr *ngFor="let c of categories" > 
+                                <td> </td>
+                                <td> {{c.name}} </td>
                                 <td class="align-middle">
                                 <div class="d-flex justify-content-evenly" >
                                     <button class="btn btn-light"  (click)="deleteCategory(c)">
@@ -58,12 +51,10 @@
                         </tr>
                     </tbody>
                 </table>
-            </div>
         </div>
         <div class="col-12 d-flex justify-content-between">
-            <button class="btn btn-dark" type="submit" (click)="previousPage()" [disabled]="this.page==0"> Pagina Anterior </button>
-            <button class="btn btn-dark" type="submit" (click)="nextPage()" [disabled]="(categories|categoryFilter:categorySearch:page).length === 0"> Pagina Siguiente </button>
+            <button class="btn btn-dark" type="submit" (click)="previousPage()" > Pagina Anterior </button>
+            <button class="btn btn-dark" type="submit" (click)="nextPage()" > Pagina Siguiente </button>
         </div>     
     </div>
 </div> 
- -->  
