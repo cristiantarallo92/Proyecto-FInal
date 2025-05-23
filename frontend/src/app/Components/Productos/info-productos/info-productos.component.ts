@@ -87,16 +87,15 @@ export class InfoProductosComponent implements OnInit {
             }
         ) 
         this.configModal(); 
-        console.log("modAL",    this.modal)
+        this.product = this.modal.modalData
     }
 
     configModal(): void {
         if (this.modal.modalMode) {
-          //  this.product = this.modal.modalData;
             this.productForm.controls['name'].setValue(this.modal.modalData['name']);
             this.productForm.controls['description'].setValue(this.modal.modalData['description']);
-            this.productForm.controls['category'].setValue(this.modal.modalData['category']);
-            this.productForm.controls['brand'].setValue(this.modal.modalData['brand']);
+            this.productForm.controls['category'].setValue(this.modal.modalData.category['name']);
+            this.productForm.controls['brand'].setValue(this.modal.modalData.brand['name']);
             this.productForm.controls['stock'].setValue(this.modal.modalData['stock']);
             this.productForm.controls['price'].setValue(this.modal.modalData['price']);
             this.disabledInput();
@@ -110,7 +109,6 @@ export class InfoProductosComponent implements OnInit {
         this.productForm.controls['brand'].disable();
         this.productForm.controls['stock'].disable();
         this.productForm.controls['price'].disable();
-        //  this.productForm.controls[`${input}`].disable();
     }
 
     configInput(input: string): void {
@@ -155,7 +153,6 @@ export class InfoProductosComponent implements OnInit {
             this.formInputs[index].editMode = true;
             this.formInputs[index].saveMode = false;
         }
-        this.productForm.value
     }
 
     getInputActive(input: string): number {
@@ -194,7 +191,6 @@ export class InfoProductosComponent implements OnInit {
         if (isNaN(parsed)) {
             return 0; }
         return parsed;
-  //  return parseFloat((price.toString()).replace(",","."));  }
     }
 
     convertStock( stock:number ): number {
@@ -206,6 +202,7 @@ export class InfoProductosComponent implements OnInit {
     }
 
     saveModal() {  
+        console.log("product before", this.product)
         const product = { id: this.product.id, 
             name: this.product.name,
             description: this.product.description,
@@ -214,11 +211,14 @@ export class InfoProductosComponent implements OnInit {
             price: this.convertPrice(this.product.price),
             stock: this.product.stock}   
         this.getFormsValues();
+        console.log("const product", product)
+        console.log("product", this.product)
+        console.log("product id", this.product.id)
         if(this.modal.modalMode){
         if (this.getInputIndex() == -1  ) { 
             if( _.isEqual(product, this.product) ) {
                 this.dialogRef.close();  
-            } else { 
+            } else {  
             this.productService.editProduct(this.product.id, this.product).subscribe(
                 res => {
                 window.alert("Producto editado correctamente. ");
@@ -228,8 +228,8 @@ export class InfoProductosComponent implements OnInit {
                 console.log("err", err);
                 window.alert("ERROR - No pudo completarse la edicion del producto. Por favor intente nuevamente en unos minutos ...");
                 this.dialogRef.close();
-                }
-            ) }
+                } 
+            )}
         } else {
         this.dialog.open(CancelEditionComponent, { disableClose: true })
         }
@@ -251,7 +251,7 @@ export class InfoProductosComponent implements OnInit {
 
     cancelModal(): void {
     this.emptyForm =  Object.values(this.productForm.value).every(value => value === '' || value === null || value == 0) 
-    if( (this.getInputIndex() == -1 && this.emptyForm &&this.modal.modalMode == false ) || (this.getInputIndex() == -1 && this.emptyForm  == false && this.modal.modalMode ) ) {
+    if( (this.getInputIndex() == -1 && this.emptyForm && this.modal.modalMode == false ) || (this.getInputIndex() == -1 && this.emptyForm  == false && this.modal.modalMode ) ) {
         this.dialogRef.close();
         } else {
             this.dialog.open(CancelEditionComponent, { disableClose: true })

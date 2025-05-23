@@ -89,6 +89,7 @@ export class ListaProductosComponent implements OnInit {
     }
 
     editProduct(product: ProductModel) {
+        console.log("EDIT PRODUCT LIST", product)
     const modal = new ModalData('Editar Producto', true, product, 'Producto');    
     const dialog = this.dialog.open(InfoProductosComponent, {
         disableClose: true,

@@ -22,9 +22,6 @@ export class DeleteItemComponent implements OnInit {
     console.log("BORRAR ID", this.modal.modalData['id'])
   }
 
-  cancelDialog(){
-      this.matDialog.close(); 
-  }
   
   deletedItemInfo() {
     switch(this.modal.modalItem) { 
@@ -36,14 +33,14 @@ export class DeleteItemComponent implements OnInit {
       break;
     }
   }
+ 
+  cancelDialog() {
+    this.matDialog.close(); 
+  }
 
-  closeDialog(){
-    
+  closeDialog(){   
     switch(this.modal.modalItem) { 
       case 'Producto':       
-      console.log("BORRAR NOMBRE ", this.deletedElement )
-      console.log("BORRAR ID", this.modal.modalData['id'])
-      /*
       this.productService.deleteProduct(this.modal.modalData['id']).subscribe( 
         response => {
           console.log ("Producto eliminado - ", response);
@@ -55,14 +52,13 @@ export class DeleteItemComponent implements OnInit {
           window.alert("ERROR - No pudo eliminar el producto. Por favor intente nuevamente en unos minutos ...");
           this.matDialog.close(); 
         }
-      )*/
+      )
       break;
       case 'Categoria':
       console.log("BORRAR NOMBRE ", this.deletedElement )
       console.log("BORRAR ID", this.modal.modalData['id'])
 
-      
-
     }
   } 
+  
 }
