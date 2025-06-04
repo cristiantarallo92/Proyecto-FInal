@@ -37,6 +37,8 @@ import { InfoProveedoresComponent } from './Components/Personas/Proveedores/info
 import { FiltraPersonasComponent } from './Components/Personas/filtra-personas/filtra-personas.component';
 import { InfoPersonasComponent } from './Components/Personas/info-personas/info-personas.component';
 import { PersonFilterPipe } from './Pipes/person-filter.pipe';
+import { ListaMarcasComponent } from './Components/Marcas/lista-marcas/lista-marcas.component';
+import { InfoMarcasComponent } from './Components/Marcas/info-marcas/info-marcas.component';
 
 
 
@@ -66,6 +68,8 @@ import { PersonFilterPipe } from './Pipes/person-filter.pipe';
     FiltraPersonasComponent,
     InfoPersonasComponent,
     PersonFilterPipe,
+    ListaMarcasComponent,
+    InfoMarcasComponent,
  ],
   imports: [
     AppRoutingModule,

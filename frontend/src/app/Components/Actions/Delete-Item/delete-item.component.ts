@@ -31,6 +31,9 @@ export class DeleteItemComponent implements OnInit {
       case 'Categoria':
       this.deletedElement = this.modal.modalData['name'];
       break;
+      case 'Marca':
+      this.deletedElement = this.modal.modalData['name'];
+      break;
     }
   }
  
@@ -48,17 +51,20 @@ export class DeleteItemComponent implements OnInit {
           this.matDialog.close(); 
         } ,
         error => {
-          console.log ("Error - ", error)
+          console.log ("Error - ", error);
           window.alert("ERROR - No pudo eliminar el producto. Por favor intente nuevamente en unos minutos ...");
           this.matDialog.close(); 
         }
       )
       break;
       case 'Categoria':
-      console.log("BORRAR NOMBRE ", this.deletedElement )
-      console.log("BORRAR ID", this.modal.modalData['id'])
-
+      console.log("BORRAR NOMBRE ", this.deletedElement );
+      console.log("BORRAR ID", this.modal.modalData['id']);
+      break;
+      case 'Marca':
+      console.log("BORRAR NOMBRE ", this.deletedElement );
+      console.log("BORRAR ID", this.modal.modalData['id']);
     }
   } 
-  
+
 }

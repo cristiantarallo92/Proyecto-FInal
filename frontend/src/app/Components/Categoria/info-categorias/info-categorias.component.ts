@@ -30,14 +30,13 @@ export class InfoCategoriasComponent implements OnInit {
     categoryName: new FormControl('', [Validators.required,Validators.minLength(5),Validators.maxLength(50),Validators.pattern(/^(?!\s*$).+/)]),
   });
 
-  ncategory = new CategoryModel();  
+  ncategory = new CategoryModel();   
   categoryEdited = new CategoryModel();
   emptyForm: boolean;
   formInputs: Input []  = [{
     inputName: 'categoryName',
     editMode: true,
-    saveMode: false},
-] 
+    saveMode: false}] 
     
     configModal() {
         if(this.modal.modalMode) {

@@ -64,7 +64,7 @@ export class ListaProductosComponent implements OnInit {
 } 
     
     filterProducts(): void {
-        this.categoryService.getCategoryByName(this.filterProductForm.value['category']).subscribe( respond => { this.category = respond },
+        this.categoryService.getCategoryByName(this.filterProductForm.value['category']).subscribe( respond => { this.category = respond ; console.log("categoria producto", this.category)},
                                                                                                     error   => {  })
         this.brandService.getBrandByName(this.filterProductForm.value['brand']).subscribe(  respond => { this.brand = respond },
                                                                                             error   => { }) 

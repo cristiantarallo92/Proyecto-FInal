@@ -4,7 +4,7 @@ import  axios from  'axios'
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CategoryModel } from '../Models/category.model';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { NAMED_ENTITIES } from '@angular/compiler';
 
 @Injectable({
@@ -43,5 +43,13 @@ export class CategoryService {
       })
     ); 
   };
+
+  getCategoriesByName = (name: string): Observable<CategoryModel[] | null> => {
+     return this.categories$.asObservable().pipe( 
+      tap( category => {
+      console.log("CategoriaByName", category)
+      }) 
+     )
+  } 
 
 }

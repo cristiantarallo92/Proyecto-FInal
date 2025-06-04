@@ -1,6 +1,7 @@
 Modulo Productos:
 
 (lista-productos)
+.  Alinear listado de productos.
 .  El NotFoundComponent (cuando se filtra un producto y no se encuentran resultados con los datos filtrados) tiene que centrarse mejor.
 .  Agregar un manejador de errorespara observables.
 .  Agregar paginacion para productos
@@ -19,7 +20,27 @@ Modulo Productos:
 .  Cuando se abre el modal en modo 'Agregar producto' y si se cancela la accion se muestran los campos que piden agregar un valor cuandpo se esta saliendo del modal.
 .  Obtener info de categoria y marca usando el service
 
+Modulo Categorias:
 
+(lista-categorias)
+.  Alinear listado de categorias.
+.  Agregar servicios (agregar, editar, eliminar categoria)  .
+.  Agregar un manejador de errorespara observables.
+.  Agregar paginacion para categorias.
+.  Agregar tipado para creacion y edicion de categorias.
+   _ Agregar / Editar --> . Nombre modal
+                          . Modo edicion
+.  Agregar tipado para borrado de categorias.
+   _ Borrar --> . Nombre modal
+                . Modo modal
+                . Data producto
+                . Tipo data ´producto´
+
+Modulo Marcas:
+
+(info-marcas):
+.  Agregrar espaciado de boton 'guardar' que esta al lado de input.
+.  Modificar para que no aparescan mensajes en input en modo Agregar / Editar.
 Dudas:
 .  Conviene tener cada model dentro de su componente? Los modals de producto dentro de productos, los modal de categorias con los de categoria y asi.
 .  Hablar con piru por el tema de observables.

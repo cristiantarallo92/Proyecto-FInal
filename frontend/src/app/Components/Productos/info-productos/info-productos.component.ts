@@ -202,18 +202,14 @@ export class InfoProductosComponent implements OnInit {
     }
 
     saveModal() {  
-        console.log("product before", this.product)
-        const product = { id: this.product.id, 
-            name: this.product.name,
-            description: this.product.description,
-            brand: this.product.brand,
-            category: this.product.category,
-            price: this.convertPrice(this.product.price),
-            stock: this.product.stock}   
+            const product = { id: this.product.id, 
+                              name: this.product.name,
+                              description: this.product.description,
+                              brand: this.product.brand,
+                              category: this.product.category,
+                              price: this.convertPrice(this.product.price),
+                              stock: this.product.stock}   
         this.getFormsValues();
-        console.log("const product", product)
-        console.log("product", this.product)
-        console.log("product id", this.product.id)
         if(this.modal.modalMode){
         if (this.getInputIndex() == -1  ) { 
             if( _.isEqual(product, this.product) ) {
@@ -247,7 +243,7 @@ export class InfoProductosComponent implements OnInit {
                 }
               );
         } 
-    }
+    } 
 
     cancelModal(): void {
     this.emptyForm =  Object.values(this.productForm.value).every(value => value === '' || value === null || value == 0) 

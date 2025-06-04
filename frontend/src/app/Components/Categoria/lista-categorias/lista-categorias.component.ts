@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-
 import { CategoryModel } from 'src/app/Models/category.model';
 import { DeleteItemComponent } from '../../Actions/Delete-Item/delete-item.component';
 import { InfoCategoriasComponent } from '../info-categorias/info-categorias.component';
-//import { ModalData } from '../../../Models/modalData.model';
 import { CategoryService } from 'src/app/Services/category.service';
 import { ModalData } from 'src/app/Models/modal-data.model';
 
@@ -62,14 +60,14 @@ deleteCategory( category: CategoryModel ): void {
   });
 }
 
-searchCategory(): void {
-    console.log("Searching category", this.filterCategoryForm.value['category']);
+clearCategoriesFilter(): void {
+  this.filterCategoryForm.get('category').setValue('');
 }
 
 
-removeCategoryFilter(): void {
-    // this.page = 0;
-    this.filterCategoryForm.get('category').setValue('');
+filterCategories(): void {
+  this.categoryService.getCategoryByName(this.filterCategoryForm.value['category']).subscribe( respond => { this.category = respond; console.log("categoria producto", this.category)},
+  error   => {  })
 }
 
 previousPage() {}

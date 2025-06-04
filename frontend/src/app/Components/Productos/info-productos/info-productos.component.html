@@ -6,8 +6,8 @@
             </h3>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12">
+    <div class="row d-flex flex-row">
+        <div class="col-6 d-flex  align-content-stretch flex-wrap">
             <form class="was-validated" [formGroup]="productForm">
                 <div class="col-12 d-flex flex-row">
                     <div class="col-12 mt-3 d-flex flex-column">
@@ -266,6 +266,24 @@
                     </div>
                 </div>
             </form>    
+        </div>
+        <div class="col-6 d-flex flex-column">
+            <div class="col-12 d-flex flex-row mt-3">
+                <div class="col-2">
+
+                </div>
+                <div class="col-8 p-2">
+                    <img src="../../../../assets/images/Productos/info-productos/prueba.png" class="img-thumbnail" alt="...">
+                </div>
+                <div class="col-2">
+                    
+                </div>
+            </div>
+               
+                <div class="col-12 d-grid gap-2">
+                                    <button *ngIf="!modal.modalMode" class="btn btn-dark" type="button">  Agregar Imagen </button>
+                                    <button *ngIf="modal.modalMode" class="btn btn-dark"  type="button">  Editar  Imagen </button>
+                </div>         
         </div>
     </div>
     <div class="row">
