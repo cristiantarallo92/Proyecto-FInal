@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString, IsOptional } from 'class-validator';
 
 export class CreateProductDto {
   @IsString({ message: 'El nombre debe ser una cadena de texto' })
@@ -9,19 +9,19 @@ export class CreateProductDto {
   @IsNotEmpty({ message: 'La descripción es requerida' })
   description: string;
 
-  @IsNumber({}, { message: 'El ID de la marca debe ser un número' })
   @IsNotEmpty({ message: 'El ID de la marca es requerido' })
-  brandId: number;
+  brandId: number | string;
 
-  @IsNumber({}, { message: 'El ID de la categoría debe ser un número' })
   @IsNotEmpty({ message: 'El ID de la categoría es requerido' })
-  categoryId: number;
+  categoryId: number | string;
 
-  @IsNumber({}, { message: 'El precio debe ser un número' })
   @IsNotEmpty({ message: 'El precio es requerido' })
-  price: number;
+  price: number | string;
 
-  @IsNumber({}, { message: 'El stock debe ser un número' })
   @IsNotEmpty({ message: 'El stock es requerido' })
-  stock: number;
+  stock: number | string;
+
+  @IsOptional()
+  @IsString({ message: 'La URL de la imagen debe ser una cadena de texto' })
+  imageUrl?: string;
 }

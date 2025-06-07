@@ -18,8 +18,8 @@ export class BrandsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.brandsService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    return await this.brandsService.findOne(+id);
   }
 
   @Patch(':id')
@@ -28,7 +28,7 @@ export class BrandsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.brandsService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.brandsService.remove(+id);
   }
 }

@@ -18,11 +18,19 @@ export class BrandsService {
   }
 
   async findAll() {
-    return await this.brandRepository.find();
+    const brands = await this.brandRepository.find();
+    if (!brands) {
+      throw new NotFoundException('Brands not found');
+    }
+    return brands;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} brand`;
+  async findOne(id: number) {
+    const brand = await this.brandRepository.findOneBy({ id });
+    if (!brand) {
+      throw new NotFoundException('Brand not found');
+    }
+    return brand;
   }
 
   async update(id: number, updateBrandDto: UpdateBrandDto) {
@@ -30,10 +38,16 @@ export class BrandsService {
     if (!brand) {
       throw new NotFoundException('Brand not found');
     }
-    return await this.brandRepository.update(id, updateBrandDto);
+    await this.brandRepository.update(id, updateBrandDto);
+    return this.findOne(id);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} brand`;
+  async remove(id: number) {
+    const brand = await this.findOne(id);
+    if (!brand) {
+      throw new NotFoundException('Brand not found');
+    }
+    await this.brandRepository.delete(id);
+    return brand;
   }
 }

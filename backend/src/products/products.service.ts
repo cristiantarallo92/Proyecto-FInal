@@ -68,10 +68,24 @@ export class ProductsService {
       );
     }
 
+    // Asegurar que los valores sean números
+    const brandId = typeof createProductDto.brandId === 'string' ? 
+      parseInt(createProductDto.brandId, 10) : createProductDto.brandId;
+    const categoryId = typeof createProductDto.categoryId === 'string' ? 
+      parseInt(createProductDto.categoryId, 10) : createProductDto.categoryId;
+    const price = typeof createProductDto.price === 'string' ? 
+      parseFloat(createProductDto.price) : createProductDto.price;
+    const stock = typeof createProductDto.stock === 'string' ? 
+      parseInt(createProductDto.stock, 10) : createProductDto.stock;
+
     const product = this.productRepository.create({
-      ...createProductDto,
-      brand: { id: createProductDto.brandId },
-      category: { id: createProductDto.categoryId },
+      name: createProductDto.name,
+      description: createProductDto.description,
+      price: price,
+      stock: stock,
+      imageUrl: createProductDto.imageUrl,
+      brand: { id: brandId },
+      category: { id: categoryId },
     });
     
     const savedProduct = await this.productRepository.save(product);
@@ -81,6 +95,7 @@ export class ProductsService {
       description: savedProduct.description,
       price: savedProduct.price,
       stock: savedProduct.stock,
+      imageUrl: savedProduct.imageUrl,
       brandId: savedProduct.brand.id,
       categoryId: savedProduct.category.id,
     };
@@ -94,9 +109,29 @@ export class ProductsService {
     if (!product) {
       throw new NotFoundException('Producto no encontrado');
     }
+
+    // Convertir tipos si vienen como string
+    const updatedData: any = { ...updateProductDto };
+    if (updatedData.brandId && typeof updatedData.brandId === 'string') {
+      updatedData.brandId = parseInt(updatedData.brandId, 10);
+      updatedData.brand = { id: updatedData.brandId };
+      delete updatedData.brandId;
+    }
+    if (updatedData.categoryId && typeof updatedData.categoryId === 'string') {
+      updatedData.categoryId = parseInt(updatedData.categoryId, 10);
+      updatedData.category = { id: updatedData.categoryId };
+      delete updatedData.categoryId;
+    }
+    if (updatedData.price && typeof updatedData.price === 'string') {
+      updatedData.price = parseFloat(updatedData.price);
+    }
+    if (updatedData.stock && typeof updatedData.stock === 'string') {
+      updatedData.stock = parseInt(updatedData.stock, 10);
+    }
+
     return await this.productRepository.save({
       ...product,
-      ...updateProductDto,
+      ...updatedData,
     });
   }
 
