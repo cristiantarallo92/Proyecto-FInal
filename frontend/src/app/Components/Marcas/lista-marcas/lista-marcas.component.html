@@ -26,13 +26,12 @@
                         <th scope="col"> Opciones </th>
                       </tr>
                     </thead>  
-                    <tbody>   <!-- 
-                            <tr class="mh-100" *ngIf="categories?.length == 0">
+                    <tbody>   
+                            <tr class="mh-100" *ngIf="brands?.length == 0">
                                 <td  colspan="8"  class="border border-0" >  
-                                    <app-noresults  [item]="'Categorias'" [icon]="categoryIcon"> </app-noresults>
+                                    <app-noresults  [item]="'Marcas'" [icon]="brandIcon"> </app-noresults>
                                 </td>  
                             </tr>
-                            -->
                             <tr *ngFor="let b of brands" > 
                                 <td> </td>
                                 <td> {{b.name}} </td>

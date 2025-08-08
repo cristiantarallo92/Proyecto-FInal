@@ -16,8 +16,7 @@ export class ListaCategoriaComponent implements OnInit {
 
   constructor( private dialog: MatDialog, 
                private categoryService: CategoryService ) { }
-  // page: number = 0;
-  categorySearch: string = ''; 
+               
   categoryIcon:string = `<svg xmlns="http://www.w3.org/2000/svg" width="10vw" height="10vh" fill="currentColor" class="bi bi-card-list" viewBox="0 0 16 16">
   <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z"/>
   <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8m0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0M4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0"/>
@@ -29,7 +28,7 @@ export class ListaCategoriaComponent implements OnInit {
   });
 
 ngOnInit(): void {
-   this.categoryService.getCategories().subscribe( categories => {
+   this.categoryService.getCategories( ).subscribe( categories => {
                                                                    this.categories = categories;
                                                                    console.log("CATEGORIAS RECIBIDAS", this.categories) },
                                                     error => {
@@ -58,16 +57,34 @@ deleteCategory( category: CategoryModel ): void {
     disableClose: true,
     data: modal
   });
+   dialog.afterClosed().subscribe( (deletedCategory:CategoryModel ) => {
+    if( deletedCategory ) {
+    this.categoryService.deleteCategory( deletedCategory.id ).subscribe( 
+      response => { console.log("Categoria Eliminada - ", response);
+                    window.alert("Categoria eliminada correctamente. ");
+                  },
+      error =>  {  console.log ("Error - ", error);
+                   window.alert("ERROR - No pudo eliminar la categoria. Por favor intente nuevamente en unos minutos ...");
+                })
+    }
+  })
 }
 
 clearCategoriesFilter(): void {
   this.filterCategoryForm.get('category').setValue('');
+  this.filterCategories();
 }
 
 
-filterCategories(): void {
-  this.categoryService.getCategoryByName(this.filterCategoryForm.value['category']).subscribe( respond => { this.category = respond; console.log("categoria producto", this.category)},
-  error   => {  })
+filterCategories( ): void {
+  this.categoryService.categoriesFiltered(this.filterCategoryForm.get('category').value).subscribe(
+    categoriesFiltered => {
+      this.categories = categoriesFiltered
+    },
+    error => {
+      console.log("Error - ", error)
+    }
+  )
 }
 
 previousPage() {}

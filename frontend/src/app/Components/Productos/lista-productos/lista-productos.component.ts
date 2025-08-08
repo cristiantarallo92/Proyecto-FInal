@@ -34,9 +34,13 @@ export class ListaProductosComponent implements OnInit {
     }) 
     products: ProductModel[] = [];
     brands: BrandModel[];
-    brand: BrandModel;
+    brand: BrandModel = { name: '',
+                          id: null
+    }
     categories: CategoryModel[];
-    category: CategoryModel;
+    category: CategoryModel = { name: '',
+                                id: null
+}
 
     constructor( private dialog: MatDialog, 
                  private productService: ProductService,
@@ -45,6 +49,7 @@ export class ListaProductosComponent implements OnInit {
  
     ngOnInit(): void {
     this.productService.getProducts().subscribe(products => {
+            console.log("esto son los productos -- ", products)
             this.products = products;
           });
     this.categoryService.getCategories().subscribe(
@@ -64,20 +69,25 @@ export class ListaProductosComponent implements OnInit {
 } 
     
     filterProducts(): void {
-        this.categoryService.getCategoryByName(this.filterProductForm.value['category']).subscribe( respond => { this.category = respond ; console.log("categoria producto", this.category)},
-                                                                                                    error   => {  })
-        this.brandService.getBrandByName(this.filterProductForm.value['brand']).subscribe(  respond => { this.brand = respond },
-                                                                                            error   => { }) 
-        this.productService.getAllProducts( this.filterProductForm.value['productName'], this.category ? this.category.id : '' ,  this.brand ? this.brand.id : '' ).subscribe( res => this.products = res )
+        this.categoryService.findCategory(this.filterProductForm.value['category']).subscribe( respond => { 
+                                                                                                            this.category = respond
+         },
+                                                                                               error   => { 
+                                                                                               console.log("Error - ", error) 
+                                                                                                })
+        this.brandService.findBrand(this.filterProductForm.value['brand']).subscribe(  respond => { 
+                                                                                                    this.brand = respond },
+                                                                                       error   => { 
+                                                                                                    console.log("Error - ", error) 
+                                                                                       })                                                                               
+        this.productService.filterProductsByParams( this.filterProductForm.value['productName'], this.category ? this.category.id : '' ,  this.brand ? this.brand.id : '' ).subscribe( res => this.products = res )
     }
     
     clearProductsFilter():void {
-        // this.page = 0;
-        this.formControls = this.getFormsKeys(this.filterProductForm);
-        this.formControls.forEach( control => {
-        this.filterProductForm.get(control).setValue('');
-        this.filterProducts();
-        })
+        this.filterProductForm.get('productName').setValue('')
+        this.filterProductForm.get('category').setValue('')
+        this.filterProductForm.get('brand').setValue('')
+        this.filterProducts(); 
     }
     
     addProduct():void {
@@ -90,8 +100,8 @@ export class ListaProductosComponent implements OnInit {
 
     editProduct(product: ProductModel) {
         console.log("EDIT PRODUCT LIST", product)
-    const modal = new ModalData('Editar Producto', true, product, 'Producto');    
-    const dialog = this.dialog.open(InfoProductosComponent, {
+        const modal = new ModalData('Editar Producto', true, product, 'Producto');    
+        const dialog = this.dialog.open(InfoProductosComponent, {
         disableClose: true,
         data: modal
       })

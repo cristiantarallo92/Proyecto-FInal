@@ -14,7 +14,7 @@
                 <input class="form-control w-25 m-1" type="search" placeholder="Categoria" aria-label="Buscar"  formControlName="category">  
                 <button class="btn btn-outline-light m-1" (click)="clearCategoriesFilter()"> Quitar Filtros </button>    
                 <ng-container *ngIf="filterCategoryForm.value['categoria'] == null">
-                <button class="btn btn-outline-light m-1" (click)="filterCategories()"> Aplicar Filtro </button>
+                <button class="btn btn-outline-light m-1" (click)="filterCategories()"> Aplicar Filtro </button> 
                 </ng-container>
              </form>
         </div>
@@ -56,8 +56,8 @@
                 </table>
         </div>
         <div class="col-12 d-flex justify-content-between">
-            <button class="btn btn-dark" type="submit" (click)="previousPage()" > Pagina Anterior </button>
-            <button class="btn btn-dark" type="submit" (click)="nextPage()" > Pagina Siguiente </button>
+            <button class="btn btn-dark" type="submit" (click)="previousPage()" > Pagina Anterior  </button>
+            <button class="btn btn-dark" type="submit" (click)="nextPage()" >     Pagina Siguiente </button>
         </div>     
     </div>
 </div> 

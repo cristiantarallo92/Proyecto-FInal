@@ -23,18 +23,23 @@ Modulo Productos:
 Modulo Categorias:
 
 (lista-categorias)
-.  Alinear listado de categorias.
-.  Agregar servicios (agregar, editar, eliminar categoria)  .
-.  Agregar un manejador de errorespara observables.
-.  Agregar paginacion para categorias.
-.  Agregar tipado para creacion y edicion de categorias.
+.  Alinear listado de categorias (titulo del modulo, listado, etc). - PENDIENTE
+.  Agregar servicios (agregar, editar, eliminar categoria). LISTO
+.  Agregar un manejador de errorespara observables. - PENDIENTE
+.  Agregar paginacion para categorias. - PENDIENTE
+.  Agregar tipado para creacion y edicion de categorias. - LISTO
    _ Agregar / Editar --> . Nombre modal
                           . Modo edicion
-.  Agregar tipado para borrado de categorias.
+.  Agregar tipado para borrado de categorias. - DESESTIMADO
    _ Borrar --> . Nombre modal
                 . Modo modal
                 . Data producto
                 . Tipo data ´producto´
+. Agregar filtrado de categorias. - EN CURSO
+
+Dudas: 
+. Tengo que agregar un mensaje personalizado a cada tipo de error (segun el codigo) ? Por ejemplo, borrar una categoria que actualemte esta asignada a uno o mas productos; crear una categoria con un nombre existente. etc. 
+  Lkos manejadores de error o interseptores sirven para esto?
 
 Modulo Marcas:
 

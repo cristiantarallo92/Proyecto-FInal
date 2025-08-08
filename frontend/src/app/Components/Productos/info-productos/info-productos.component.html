@@ -6,11 +6,11 @@
             </h3>
         </div>
     </div>
-    <div class="row d-flex flex-row">
-        <div class="col-6 d-flex  align-content-stretch flex-wrap">
+    <div class="row d-flex  align-content-stretch flex-wrap">
+        <div class="col-6 d-flex  align-items-stretch">
             <form class="was-validated" [formGroup]="productForm">
                 <div class="col-12 d-flex flex-row">
-                    <div class="col-12 mt-3 d-flex flex-column">
+                    <div class="col-12 d-flex flex-column">
                         <div>
                             <label for="name" class="form-label">  Producto </label>
                         </div>
@@ -54,10 +54,10 @@
                                 </div>
                             </div>
                         </div>
-                    </div>  
+                    </div>     
                 </div>
                 <div class="col-12 d-flex flex-row">
-                    <div class="col-12 mt-3 d-flex flex-column">
+                    <div class="col-12 d-flex flex-column">
                         <div class="col-12">
                             <label for="description" class="form-label"> Descripcion  </label>
                         </div>
@@ -96,7 +96,7 @@
                                     <p class="text-danger h6"> Este campo es obligatorio </p>
                                 </div>
                                 <div
-                                    *ngIf="this.productForm.get('description').hasError('minlength')  || this.productForm.get('name').hasError('maxlength')">
+                                    *ngIf="this.productForm.get('description').hasError('minlength')  || this.productForm.get('name').hasError('description')">
                                     <p class="text-danger h6"> Este campo admite entre 5 y 100 caracteres </p>   
                                 </div>
                             </div>
@@ -104,7 +104,7 @@
                     </div> 
                 </div>
                 <div class="col-12  d-flex flex-row">
-                    <div class="col-6  mt-3 p-1 d-flex flex-column"> 
+                    <div class="col-6   p-1 d-flex flex-column"> 
                         <div>
                             <label for="inputState" class="form-label"> Categoria </label>
                         </div>
@@ -138,13 +138,12 @@
                             </div>
                         </div>
                         <div class="mt-2">
-                            <div
-                                *ngIf="(this.productForm.get('category').hasError('required') && this.productForm.get('category').touched && modal.modalMode == false)">
+                            <div *ngIf="( ( this.productForm.get('category').hasError('required') && modal.modalMode) || (this.productForm.get('category').hasError('required') && this.productForm.get('category').touched && modal.modalMode == false) )  && this.emptyForm"> 
                                 <p class="text-danger h6"> Necesita asignar una categoria al producto </p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-6  mt-3 p-1 d-flex flex-column">
+                    <div class="col-6 p-1 d-flex flex-column">
                         <div>
                             <label for="inputState" class="form-label"> Marca </label>
                         </div>
@@ -178,15 +177,15 @@
                             </div>
                         </div>
                         <div class="mt-2">
-                            <div
-                                *ngIf="(this.productForm.get('brand').hasError('required') && this.productForm.get('brand').touched && modal.modalMode == false)">
+                <!--              <div *ngIf="(this.productForm.get('brand').hasError('required') && this.productForm.get('brand').touched && modal.modalMode == false)"> -->   
+                                   <div *ngIf="( ( this.productForm.get('brand').hasError('required') && modal.modalMode) || (this.productForm.get('brand').hasError('required') && this.productForm.get('brand').touched && modal.modalMode == false) )  && this.emptyForm"> 
                                 <p class="text-danger h6"> Necesita asignar una marca al producto </p>
                             </div>
                         </div>
-                    </div>  
+                    </div>   
                 </div>
                 <div class="col-12 d-flex flex-row">
-                    <div class="col-6  mt-3 p-1"> 
+                    <div class="col-6  p-1"> 
                         <label for="exampleFormControlInput1" class="form-label"> Stock </label>
                         <div class="d-flex">
                             <input type="number" class="form-control me-2" id="exampleFormControlInput1"
@@ -217,7 +216,7 @@
                         </div>
                         <div class="mt-2">
                             <div
-                                *ngIf="( ( this.productForm.get('stock').hasError('required') && modal.modalMode) || (this.productForm.get('stock').hasError('required') && this.productForm.get('stock').touched && modal.modalMode == false) )  && this.emptyForm ">
+                                *ngIf="( ( this.productForm.get('stock').hasError('required') && modal.modalMode) || (this.productForm.get('stock').hasError('required') && this.productForm.get('stock').touched && modal.modalMode == false) )  && this.emptyForm">
                                 <p class="text-danger h6"> Este campo es obligatorio </p>
                             </div>
                             <div *ngIf="this.productForm.get('stock').hasError('pattern')">
@@ -225,7 +224,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 mt-3 p-1">
+                    <div class="col-6  p-1">
                         <label for="exampleFormControlInput1" class="form-label"> Precio </label>
                         <div class="d-flex">
                             <input type="number" class="form-control me-2" id="exampleFormControlInput1"
@@ -267,23 +266,13 @@
                 </div>
             </form>    
         </div>
-        <div class="col-6 d-flex flex-column">
-            <div class="col-12 d-flex flex-row mt-3">
-                <div class="col-2">
-
-                </div>
-                <div class="col-8 p-2">
-                    <img src="../../../../assets/images/Productos/info-productos/prueba.png" class="img-thumbnail" alt="...">
-                </div>
-                <div class="col-2">
-                    
-                </div>
-            </div>
-               
-                <div class="col-12 d-grid gap-2">
-                                    <button *ngIf="!modal.modalMode" class="btn btn-dark" type="button">  Agregar Imagen </button>
-                                    <button *ngIf="modal.modalMode" class="btn btn-dark"  type="button">  Editar  Imagen </button>
-                </div>         
+        <div class="col-6 d-flex  justify-content-center align-content-araound flex-wrap">
+             <div class="ratio ratio-4x3 border border-3 rounded overflow-hidden p-2">
+                <img *ngIf="prevImage" [src]="prevImage" class="w-100 h-100 object-fit-contain"> 
+             </div>
+             <div class="p-2">
+                <input   (change)="addImage($event)" class="form-control form-control-lg" id="image" type="file">
+            </div>    
         </div>
     </div>
     <div class="row">

@@ -10,4 +10,6 @@ export class ProductModel {
     category:     CategoryModel;
     price:        number;
     stock:        number;
+    //image:        File|Blob;
+    image:        string;
 }

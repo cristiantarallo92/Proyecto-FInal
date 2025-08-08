@@ -40,12 +40,13 @@
                     </div> 
                 </div>
                 <div class="mt-2">
-                    <div *ngIf="(this.categoryForm.get('categoryName').hasError('required') && categoryForm.get('categoryName').touched)" >
-                        <p class="text-danger h6"> Este campo es obligatorio </p>
+                    <div *ngIf="( ( (this.categoryForm.get('categoryName').hasError('required') && modal.modalMode) || (this.categoryForm.get('categoryName').hasError('required') && this.categoryForm.get('categoryName').touched && modal.modalMode == false) ) 
+                    && this.emptyForm) " >
+                            <p class="text-danger h6"> Este campo es obligatorio </p>
                     </div>
-                 <div  *ngIf="this.categoryForm.get('categoryName').hasError('minlength')  || this.categoryForm.get('categoryName').hasError('maxlength') || this.categoryForm.get('categoryName').hasError('pattern')">
-                    <p class="text-danger h6"> Campo invalido <br>
-                        . Se admiten entre 5 y 50 caracteres <br>
+                    <div  *ngIf="this.categoryForm.get('categoryName').hasError('minlength')  || this.categoryForm.get('categoryName').hasError('maxlength') || this.categoryForm.get('categoryName').hasError('pattern')">
+                            <p class="text-danger h6"> Campo invalido <br>
+                                 . Se admiten entre 5 y 50 caracteres <br>
                     </div> 
                 </div>       
             </form>    
@@ -61,4 +62,3 @@
     </div>
 </div>        
 
-     

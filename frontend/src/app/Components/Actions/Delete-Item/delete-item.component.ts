@@ -12,13 +12,14 @@ export class DeleteItemComponent implements OnInit {
 
   deletedElement: string = ''
 
+
   constructor( public matDialog:MatDialogRef<DeleteItemComponent >, @Inject(MAT_DIALOG_DATA) public modal:ModalData,
                private productService: ProductService ) { }
 
   ngOnInit(): void {
     this.deletedItemInfo()
     console.log("modal", this.modal)
-    this.deletedElement = this.modal.modalData['name'] 
+    this.deletedElement = this.modal.modalData['name']  
     console.log("BORRAR ID", this.modal.modalData['id'])
   }
 
@@ -61,10 +62,8 @@ export class DeleteItemComponent implements OnInit {
       console.log("BORRAR NOMBRE ", this.deletedElement );
       console.log("BORRAR ID", this.modal.modalData['id']);
       break;
-      case 'Marca':
-      console.log("BORRAR NOMBRE ", this.deletedElement );
-      console.log("BORRAR ID", this.modal.modalData['id']);
-    }
+   }
+    this.matDialog.close(this.modal.modalData);
   } 
 
 }

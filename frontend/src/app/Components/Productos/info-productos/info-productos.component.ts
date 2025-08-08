@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { DomSanitizer, SafeUrl  } from '@angular/platform-browser';
 
 import { CancelEditionComponent } from '../../Actions/Cancel-Edition/cancel-edition.component';
 
@@ -28,11 +29,19 @@ export class InfoProductosComponent implements OnInit {
         category: new FormControl('', [Validators.required]),
         brand: new FormControl('', [Validators.required]),
         stock: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/)]),
-        price: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d+)?$/)]) 
+        price: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d+)?$/)]) ,
+       // image: new FormControl(null)
     });
+    imageConverted: Blob;
     brands: BrandModel[];
+    brand: BrandModel;
+    category: CategoryModel;
     categories: CategoryModel[];
     emptyForm: boolean;
+    loadingImage: boolean;
+    prevImage: SafeUrl | null = null;   
+    prevImageBase64: string | null = null;  // <<< AGREGAR para guardar base64 crudo
+    images: any = [];
     formInputs: Input [] = [{
         inputName: 'name',
         editMode: true,
@@ -68,6 +77,7 @@ export class InfoProductosComponent implements OnInit {
                 private categoryService: CategoryService, 
                 private productService: ProductService,
                 private dialog: MatDialog,
+                private sanitizer: DomSanitizer,
                 public dialogRef: MatDialogRef<InfoProductosComponent>, @Inject(MAT_DIALOG_DATA) public modal: ModalData
     ) { }
 
@@ -88,21 +98,49 @@ export class InfoProductosComponent implements OnInit {
         ) 
         this.configModal(); 
         this.product = this.modal.modalData
+        console.log("MODAL !! ", this.modal.modalData)
+       
     }
 
-    configModal(): void {
-        if (this.modal.modalMode) {
-            this.productForm.controls['name'].setValue(this.modal.modalData['name']);
-            this.productForm.controls['description'].setValue(this.modal.modalData['description']);
-            this.productForm.controls['category'].setValue(this.modal.modalData.category['name']);
-            this.productForm.controls['brand'].setValue(this.modal.modalData.brand['name']);
-            this.productForm.controls['stock'].setValue(this.modal.modalData['stock']);
-            this.productForm.controls['price'].setValue(this.modal.modalData['price']);
-            this.disabledInput();
-        }
-    }
+    
+  configModal = (): void => {
+  if (this.modal.modalMode) {
+    const producto = this.modal.modalData;
+    this.product = producto;
+    console.log("chatgpt", producto.image);
+    this.productForm.controls['name'].setValue(producto['name']);
+    this.productForm.controls['description'].setValue(producto['description']);
+    this.productForm.controls['category'].setValue(producto.category['name']);
+    this.productForm.controls['brand'].setValue(producto.brand['name']);
+    this.productForm.controls['stock'].setValue(producto['stock']);
+    this.productForm.controls['price'].setValue(producto['price']);
+ /*
+if (producto.image) {
+  const hasPrefix = producto.image.startsWith('data:image');
+  const imageSrc = hasPrefix ? producto.image : `data:image/png;base64,${producto.image}`;
+  this.prevImage = imageSrc;
+  this.prevImageBase64 = imageSrc;
+} else {
+  this.prevImage = null;
+  this.prevImageBase64 = null;
+} */
 
-    disabledInput(): void {
+  if (producto.image) {
+  let imageSrc = producto.image;
+  if (!imageSrc.startsWith('data:image')) {
+      imageSrc = `data:image/jpeg;base64,${producto.image}`;
+  }
+  this.prevImage = this.sanitizer.bypassSecurityTrustUrl(imageSrc);
+  this.prevImageBase64 = imageSrc;
+} else {
+  this.prevImage = null;
+}
+    console.log("afterPrevImage")
+    this.disabledInput();
+  }
+}
+
+    disabledInput = (): void => {
         this.productForm.controls['name'].disable();
         this.productForm.controls['description'].disable();
         this.productForm.controls['category'].disable();
@@ -111,7 +149,7 @@ export class InfoProductosComponent implements OnInit {
         this.productForm.controls['price'].disable();
     }
 
-    configInput(input: string): void {
+    configInput = (input: string): void => {
         switch (input) {
             case 'name':
                // this.productForm.controls[`${input}`].setValue(this.product.productName);
@@ -134,7 +172,7 @@ export class InfoProductosComponent implements OnInit {
         }
     }
 
-    editControl(input: string): void {
+    editControl = (input: string): void => {
         const index2 = this.getInputActive(input)
         if (this.getInputIndex() !== -1) {
             this.dialog.open(CancelEditionComponent, { disableClose: true })
@@ -145,7 +183,7 @@ export class InfoProductosComponent implements OnInit {
         }
     }
 
-    saveControl(input: string): void {
+    saveControl = (input: string): void => {
         const index = this.formInputs.findIndex(inp => inp.inputName == input)
         if (this.productForm.controls[`${input}`].valid == true) {
             this.productForm.controls[`${input}`].valueChanges.subscribe()
@@ -155,23 +193,34 @@ export class InfoProductosComponent implements OnInit {
         }
     }
 
-    getInputActive(input: string): number {
+    getInputActive = (input: string): number => {
         return this.formInputs.findIndex(inp => inp.inputName == input);
     }
 
-    getInputIndex(): number {
+    getInputIndex = (): number => {
         return this.formInputs.findIndex(inp => inp.editMode == false);
     }
     
-    getCategory( category:string ){                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         console.log("category desc",category)
-    return this.categories.find( ( { name } ) => name === category)
+
+    getCategory = ( category:string ): CategoryModel => {   
+        this.categoryService.findCategory(category).subscribe( respond => { 
+                                                                            this.category = respond } ,
+                                                               error   => {} )  
+        console.log("this.category",category)
+        return this.category;     
     }
 
-    getBrand( brand:string ): BrandModel {
-    return this.brands.find( ( { name } ) => name === brand )
+    getBrand = ( brand:string ): BrandModel => {
+        this.brandService.findBrand(brand).subscribe(  respond => { 
+                                                                      this.brand = respond } ,
+                                                       error   => {
+                                                        
+                                                       } )  
+        console.log("this.brand",brand)
+        return this.brand;
     }
    
-    getFormsValues():void {
+    getFormsValues = (): FormData => {
         const productName: string = this.productForm.controls['name'].value;
         const productDescription: string  = this.productForm.controls['description'].value;
         this.product.name  = productName.trim()
@@ -180,10 +229,21 @@ export class InfoProductosComponent implements OnInit {
         this.product.brand = this.getBrand(this.productForm.controls['brand'].value) 
         this.product.stock =  this.convertStock(this.productForm.controls['stock'].value);
         this.product.price =  this.convertPrice(this.productForm.controls['price'].value) 
-        console.log("form values", this.product)
+        const formDataProd = new FormData();
+        formDataProd.append('name', productName.trim());
+        formDataProd.append('description', productDescription.trim());
+        formDataProd.append('price',  this.product.price.toString());
+        formDataProd.append('stock',  this.product.stock.toString());
+        formDataProd.append('imageUrl', this.prevImageBase64);
+
+        formDataProd.append('brandId', this.product.brand.id.toString());
+        formDataProd.append('categoryId', this.product.category.id.toString());
+        console.log('imageUrl', this.prevImageBase64);
+        return formDataProd;
+
     }
     
-    convertPrice( price:any ) : number {
+    convertPrice = ( price:any ): number => {
         if (price === null || price === undefined || price.toString().trim() === '') {
             return 0; }
         const normalizedPrice = price.toString().replace(',', '.'); 
@@ -193,7 +253,7 @@ export class InfoProductosComponent implements OnInit {
         return parsed;
     }
 
-    convertStock( stock:number ): number {
+    convertStock = ( stock:number ): number => {
         if( stock === undefined || stock == null  || stock.toString().trim() === '' )  {
             return 0;
         } else { 
@@ -201,21 +261,71 @@ export class InfoProductosComponent implements OnInit {
         }
     }
 
+    /*
+    addImage = ( event:any ): void => {
+       const image  = event.target.files[0]
+       console.log("!!!!!!!!!!!!!!!!!!", image)
+       if ( (image.type == 'image/jpeg') || (image.type == 'image/png') ) {
+                this.images.push(image);
+                this.convertToBlobFile(image).then( (imageConverted: any) => { 
+                 this.prevImage  = imageConverted.base
+              
+          })   
+       } else {
+         window.alert("El documento seleccionado no es una imagen. Por favor elija un archivo cuya extension sea: .jpg / .png")
+       }
+    } */
+
+  addImage = (event: any): void => {
+  const image = event.target.files[0];
+  if (image && (image.type === 'image/jpeg' || image.type === 'image/png')) {
+    this.images.push(image);
+    this.convertToBlobFile(image).then((imageConverted: any) => {
+      // imageConverted.base es un base64 ya con prefijo data:image/...
+      this.prevImage = imageConverted.base;  
+      this.prevImageBase64 =  imageConverted.base;
+      console.log("prevImageBase64", this.prevImageBase64);
+    });
+  } else {
+    window.alert("El documento seleccionado no es una imagen. Por favor elija un archivo cuya extension sea: .jpg / .png");
+  }
+}
+ 
+    convertToBlobFile = async ($event: any) => new Promise((resolve, reject) => {
+        try{
+            const unsafeImg = window.URL.createObjectURL($event);
+            const image = this.sanitizer.bypassSecurityTrustUrl(unsafeImg);
+            const reader = new FileReader();
+            reader.readAsDataURL($event);
+            reader.onload = () => { resolve({ blob: $event,
+                                              image,
+                                              base: reader.result });};
+            reader.onerror = error => { resolve({ blob: $event,
+                                                  image,
+                                                  base: null});};
+        } 
+        catch (e) {
+            return null 
+        }
+    })
+
     saveModal() {  
-            const product = { id: this.product.id, 
+        const product = { id: this.product.id, 
                               name: this.product.name,
                               description: this.product.description,
                               brand: this.product.brand,
                               category: this.product.category,
                               price: this.convertPrice(this.product.price),
                               stock: this.product.stock}   
-        this.getFormsValues();
+        const prod: FormData = this.getFormsValues();
+
         if(this.modal.modalMode){
         if (this.getInputIndex() == -1  ) { 
             if( _.isEqual(product, this.product) ) {
                 this.dialogRef.close();  
             } else {  
-            this.productService.editProduct(this.product.id, this.product).subscribe(
+            console.log("prod get" , prod.get('imageUrl')  )
+            this.productService.editProduct(this.product.id, prod).subscribe(
                 res => {
                 window.alert("Producto editado correctamente. ");
                 this.dialogRef.close();
@@ -225,12 +335,13 @@ export class InfoProductosComponent implements OnInit {
                 window.alert("ERROR - No pudo completarse la edicion del producto. Por favor intente nuevamente en unos minutos ...");
                 this.dialogRef.close();
                 } 
-            )}
+            ) } 
+            
         } else {
         this.dialog.open(CancelEditionComponent, { disableClose: true })
         }
       } else {
-        this.productService.addProduct(this.product).subscribe(
+        this.productService.addProduct(this.product, prod).subscribe(
                 () => {
 
                 window.alert("Producto creado correctamente. ");
@@ -245,13 +356,13 @@ export class InfoProductosComponent implements OnInit {
         } 
     } 
 
-    cancelModal(): void {
-    this.emptyForm =  Object.values(this.productForm.value).every(value => value === '' || value === null || value == 0) 
-    if( (this.getInputIndex() == -1 && this.emptyForm && this.modal.modalMode == false ) || (this.getInputIndex() == -1 && this.emptyForm  == false && this.modal.modalMode ) ) {
-        this.dialogRef.close();
-        } else {
+    cancelModal(): void {    
+        this.emptyForm =  Object.values(this.productForm.value).every(value => value === '' || value === null || value == 0) 
+        if( (this.getInputIndex() == -1 && this.emptyForm && this.modal.modalMode == false ) || (this.getInputIndex() == -1 && this.emptyForm  == false && this.modal.modalMode ) ) {
+            this.dialogRef.close();
+            } else {
             this.dialog.open(CancelEditionComponent, { disableClose: true })
-        }  
-    }
+            }  
+        }
     
 }

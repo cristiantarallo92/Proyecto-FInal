@@ -6,6 +6,8 @@ import { BrandModel } from 'src/app/Models/brand.model';
 import { Input } from 'src/app/Models/input.model';
 import { ModalData } from 'src/app/Models/modal-data.model';
 import * as  _ from "lodash";
+import { BrandService } from 'src/app/Services/brand.service';
+
 
 @Component({
   selector: 'app-info-marcas',
@@ -19,40 +21,32 @@ export class InfoMarcasComponent implements OnInit {
   formInputs: Input []  = [{
       inputName: 'brandName',
       editMode: true,
-      saveMode: false}] 
-      
+      saveMode: false}]; 
   brandForm: FormGroup = new FormGroup({
     brandName: new FormControl('', [Validators.required,Validators.minLength(5),Validators.maxLength(50),Validators.pattern(/^(?!\s*$).+/)]),
   });
 
-  constructor( private dialog: MatDialog, public dialogRef: MatDialogRef<InfoMarcasComponent>, @Inject(MAT_DIALOG_DATA) public modal: ModalData) { }
+  constructor( private dialog: MatDialog, private brandService: BrandService, public dialogRef: MatDialogRef<InfoMarcasComponent>, @Inject(MAT_DIALOG_DATA) public modal: ModalData) { }
 
   ngOnInit(): void {
     this.configModal();
-    console.log(" modal ", this.modal)
-    console.log(" brand ", this.modal.modalData)
+    this.brand = this.modal.modalData;
   }
 
   configModal() {
     if(this.modal.modalMode) {
     this.brandForm.controls['brandName'].setValue(this.modal.modalData['name']);
-    //this.brandForm.controls['categoryDescription'].setValue(this.modal.modalData['categoryDescription']);
-    //this.brandForm.controls['availability'].setValue(this.modal.modalData['availability']);
-    this.disabledInputs() }
+    this.disabledInputs(); }
   }
     
   disabledInputs(){ 
     this.brandForm.controls['brandName'].disable();
-    //this.brandForm.controls['categoryDescription'].disable();
-    //this.brandForm.controls['availability'].disable();
   }
     
   editControl(input: string): void {
-    console.log("INPUT",input)
     const index = this.getInputActive(input)
-    console.log("INDEX",index)
     if (this.getInputIndex() !== -1) {
-      this.dialog.open(CancelEditionComponent, { disableClose: true })
+      this.dialog.open(CancelEditionComponent, { disableClose: true });
       } else {
               this.brandForm.controls[`${input}`].enable();
               this.formInputs[index].editMode = false;
@@ -61,22 +55,17 @@ export class InfoMarcasComponent implements OnInit {
   }
     
   saveControl(input: string): void {
-            const index = this.formInputs.findIndex(inp => inp.inputName == input)
-            if (this.brandForm.controls[`${input}`].valid == true) {
-                this.brandForm.controls[`${input}`].valueChanges.subscribe()
-                this.brandForm.controls[`${input}`].disable();
-                this.formInputs[index].editMode = true;
-                this.formInputs[index].saveMode = false;  
-              }
+    const index = this.formInputs.findIndex(inp => inp.inputName == input);
+    if (this.brandForm.controls[`${input}`].valid == true) {
+        this.brandForm.controls[`${input}`].valueChanges.subscribe()
+        this.brandForm.controls[`${input}`].disable();
+        this.formInputs[index].editMode = true;
+        this.formInputs[index].saveMode = false;  
+        }
   }
      
   getFormsValues(){ 
         this.brand.name = this.brandForm.controls['brandName'].value;
-        /*
-        this.nbrand.categoryId = 1;
-        this.nbrand.brandName = this.brandForm.controls['brandName'].value;
-        this.nbrand.categoryDescription = this.brandForm.controls['categoryDescription'].value;
-        this.nbrand.availability = this.brandForm.controls['availability'].value; */
    }
     
   getInputActive(input: string){
@@ -88,23 +77,42 @@ export class InfoMarcasComponent implements OnInit {
   }
     
   saveModal() {
-    const brand = { name: this.brand.name}
+    const idNull = null
+    const brand = { id:   this.brand.id,
+                    name: this.brand.name};
     this.getFormsValues();
-if(this.modal.modalMode){
+    if(this.modal.modalMode){
         if (this.getInputIndex() == -1  ) { 
             if( _.isEqual(brand, this.brand) ) {
-              window.alert("No se ha hecho ninguna edicion de la marca.");
               this.dialogRef.close();  
             } else {  
-              window.alert("Marca editada.");
-              this.dialogRef.close();
+              this.brandService.editBrand( this.brand.id, this.brand).subscribe(
+                () => { window.alert("Marca editada correctamente.");
+    
+                },
+                error => {
+                  console.log("Error - ", error);
+                  window.alert("ERROR - No pudo completarse la edicion de la marca. Por favor intente nuevamente en unos minutos ..."); 
+                }
+              )
+              this.dialogRef.close(); 
            }
         } else {
         this.dialog.open(CancelEditionComponent, { disableClose: true })
         }
       } else {
-            window.alert("Creacion de marca.");
-            this.dialogRef.close(); 
+          this.brandService.addBrand( this.brand ).subscribe(
+              () => {
+              window.alert("Marca creada correctamente. ");
+     //         this.dialogRef.close();
+              },
+              error  => {
+                  console.log("Error - ", error)
+                  window.alert("ERROR - No pudo agregar la marca. Por favor intente nuevamente en unos minutos ...");
+     //             this.dialogRef.close();  
+              }
+          ) 
+          this.dialogRef.close(); 
         } 
   }  
     
@@ -113,7 +121,7 @@ if(this.modal.modalMode){
         if( (this.getInputIndex() == -1 && this.emptyForm && this.modal.modalMode == false ) || (this.getInputIndex() == -1 && this.emptyForm  == false && this.modal.modalMode ) ) {
             this.dialogRef.close();
             } else {
-            this.dialog.open(CancelEditionComponent, { disableClose: true })
+            this.dialog.open(CancelEditionComponent, { disableClose: true });
             }  
         } 
 }
