@@ -98,13 +98,17 @@ export class ListaProductosComponent implements OnInit {
         })
     }
 
-    editProduct(product: ProductModel) {
+    editProduct(product: ProductModel) { /*
         console.log("EDIT PRODUCT LIST", product)
         const modal = new ModalData('Editar Producto', true, product, 'Producto');    
         const dialog = this.dialog.open(InfoProductosComponent, {
         disableClose: true,
         data: modal
-      })
+      }) */
+
+        const withImage = { ...product, image: (product as any).image ?? (product as any).imageUrl ?? null };
+  const modal = new ModalData('Editar Producto', true, withImage, 'Producto');
+  this.dialog.open(InfoProductosComponent, { disableClose: true, data: modal });
     }
 
     deleteProduct( product: ProductModel ) {    

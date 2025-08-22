@@ -45,7 +45,7 @@ export class ProductService {
     return this.http.post<ProductServ>(`${environment.API_URL}/products`, producFormData).pipe(
 
      tap(( newProduct )=> { 
-     console.log("newProduct -- !!", newProduct) 
+     console.log("newProduct -- !!", newProduct.imageUrl) 
     // this.categoryService.getCategoryById(newProduct.categoryId).subscribe( res => {  this.category = res })  
      this.categoryService.findCategory(newProduct.categoryId).subscribe( res   => {  
                                                                                   this.category = res },

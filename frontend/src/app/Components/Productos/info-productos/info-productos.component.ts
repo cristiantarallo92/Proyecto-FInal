@@ -97,48 +97,65 @@ export class InfoProductosComponent implements OnInit {
             }
         ) 
         this.configModal(); 
-        this.product = this.modal.modalData
+       /* this.product = this.modal.modalData
         console.log("MODAL !! ", this.modal.modalData)
+        this.prevImage = this.modal.modalData.image */
        
     }
 
     
-  configModal = (): void => {
-  if (this.modal.modalMode) {
-    const producto = this.modal.modalData;
-    this.product = producto;
-    console.log("chatgpt", producto.image);
-    this.productForm.controls['name'].setValue(producto['name']);
-    this.productForm.controls['description'].setValue(producto['description']);
-    this.productForm.controls['category'].setValue(producto.category['name']);
-    this.productForm.controls['brand'].setValue(producto.brand['name']);
-    this.productForm.controls['stock'].setValue(producto['stock']);
-    this.productForm.controls['price'].setValue(producto['price']);
- /*
-if (producto.image) {
-  const hasPrefix = producto.image.startsWith('data:image');
-  const imageSrc = hasPrefix ? producto.image : `data:image/png;base64,${producto.image}`;
-  this.prevImage = imageSrc;
-  this.prevImageBase64 = imageSrc;
-} else {
-  this.prevImage = null;
-  this.prevImageBase64 = null;
-} */
+    configModal = (): void => { /*
+        if(this.modal.modalMode) {
+            const producto = this.modal.modalData;
+            this.product = producto;
+            console.log("typeof", typeof(producto.image) );
+            console.log("chatgpt", producto.image);
+            this.productForm.controls['name'].setValue(producto['name']);
+            this.productForm.controls['description'].setValue(producto['description']);
+            this.productForm.controls['category'].setValue(producto.category['name']);
+            this.productForm.controls['brand'].setValue(producto.brand['name']);
+            this.productForm.controls['stock'].setValue(producto['stock']);
+            this.productForm.controls['price'].setValue(producto['price']);
+        if (producto.image) {
+            const imageSrc = this.normalizeImage(producto.image);
+            this.prevImage = this.sanitizer.bypassSecurityTrustUrl(imageSrc);
+            this.prevImageBase64 = imageSrc;
+            console.log("Imagen normalizada en configModal:", this.prevImageBase64);
+        } else {
+            this.prevImage = null;
+            this.prevImageBase64 = null;}
+        } */
+ console.log("modalData", this.modal.modalData)
+        
+  if (!this.modal.modalMode) return;
 
-  if (producto.image) {
-  let imageSrc = producto.image;
-  if (!imageSrc.startsWith('data:image')) {
-      imageSrc = `data:image/jpeg;base64,${producto.image}`;
+  const producto = this.modal.modalData;
+  this.product = producto;
+
+  this.productForm.patchValue({
+    name: producto?.name ?? '',
+    description: producto?.description ?? '',
+    category: producto?.category?.name ?? '',
+    brand: producto?.brand?.name ?? '',
+    stock: producto?.stock ?? '',
+    price: producto?.price ?? ''
+  });
+
+  // ⚠️ Soporta image o imageUrl
+  const rawImage: string | null =
+    (producto as any)?.image ?? (producto as any)?.imageUrl ?? null;
+
+  if (rawImage) {
+    const imageSrc = this.normalizeImage(rawImage); // agrega prefijo si hace falta
+    this.prevImage = this.sanitizer.bypassSecurityTrustUrl(imageSrc);
+    this.prevImageBase64 = imageSrc; // guardo el base64 (con prefijo) para enviar al backend
+  } else {
+    this.prevImage = null;
+    this.prevImageBase64 = null;
   }
-  this.prevImage = this.sanitizer.bypassSecurityTrustUrl(imageSrc);
-  this.prevImageBase64 = imageSrc;
-} else {
-  this.prevImage = null;
-}
-    console.log("afterPrevImage")
-    this.disabledInput();
-  }
-}
+
+  this.disabledInput();    
+    }
 
     disabledInput = (): void => {
         this.productForm.controls['name'].disable();
@@ -220,26 +237,40 @@ if (producto.image) {
         return this.brand;
     }
    
-    getFormsValues = (): FormData => {
-        const productName: string = this.productForm.controls['name'].value;
-        const productDescription: string  = this.productForm.controls['description'].value;
-        this.product.name  = productName.trim()
-        this.product.description = productDescription.trim()
-        this.product.category = this.getCategory(this.productForm.controls['category'].value)
-        this.product.brand = this.getBrand(this.productForm.controls['brand'].value) 
-        this.product.stock =  this.convertStock(this.productForm.controls['stock'].value);
-        this.product.price =  this.convertPrice(this.productForm.controls['price'].value) 
-        const formDataProd = new FormData();
-        formDataProd.append('name', productName.trim());
-        formDataProd.append('description', productDescription.trim());
-        formDataProd.append('price',  this.product.price.toString());
-        formDataProd.append('stock',  this.product.stock.toString());
-        formDataProd.append('imageUrl', this.prevImageBase64);
+    getFormsValues = (): FormData => { /*
+ const formDataProd = new FormData();
+ const brand : BrandModel = this.getBrand(this.productForm.controls['brand'].value)
+ const category : CategoryModel = this.getCategory(this.productForm.controls['category'].value)
+  formDataProd.append('name', this.productForm.value['name']);
+  formDataProd.append('description', this.productForm.value['description']);
+  formDataProd.append('price', this.productForm.value['price']);
+  formDataProd.append('stock', this.productForm.value['stock']);
+  formDataProd.append('brandId', (brand.id).toString());
+  formDataProd.append('categoryId',(category.id).toString());
+  formDataProd.append('imageUrl', this.prevImageBase64 ?? '');
 
-        formDataProd.append('brandId', this.product.brand.id.toString());
-        formDataProd.append('categoryId', this.product.category.id.toString());
-        console.log('imageUrl', this.prevImageBase64);
-        return formDataProd;
+  return formDataProd; */
+
+  const form = this.productForm.value;
+
+  // ❌ NO uses llamadas async aquí (getBrand/getCategory). Usá lo ya cargado:
+  const brand = this.brands?.find(b => b.name === form['brand']);
+  const category = this.categories?.find(c => c.name === form['category']);
+
+  const fd = new FormData();
+  fd.append('name', (form['name'] ?? '').trim());
+  fd.append('description', (form['description'] ?? '').trim());
+  fd.append('price', String(this.convertPrice(form['price'])));
+  fd.append('stock', String(this.convertStock(form['stock'])));
+  fd.append('brandId', brand?.id != null ? String(brand.id) : '');
+  fd.append('categoryId', category?.id != null ? String(category.id) : '');
+
+  // Solo envío imageUrl si tengo algo (evita pisar con vacío)
+  if (this.prevImageBase64) {
+    fd.append('imageUrl', this.prevImageBase64);
+  }
+
+  return fd;
 
     }
     
@@ -247,7 +278,7 @@ if (producto.image) {
         if (price === null || price === undefined || price.toString().trim() === '') {
             return 0; }
         const normalizedPrice = price.toString().replace(',', '.'); 
-        const parsed = parseFloat(normalizedPrice);
+        const parsed = parseFloat(normalizedPrice); 
         if (isNaN(parsed)) {
             return 0; }
         return parsed;
@@ -261,35 +292,44 @@ if (producto.image) {
         }
     }
 
-    /*
-    addImage = ( event:any ): void => {
-       const image  = event.target.files[0]
-       console.log("!!!!!!!!!!!!!!!!!!", image)
-       if ( (image.type == 'image/jpeg') || (image.type == 'image/png') ) {
-                this.images.push(image);
-                this.convertToBlobFile(image).then( (imageConverted: any) => { 
-                 this.prevImage  = imageConverted.base
-              
-          })   
-       } else {
-         window.alert("El documento seleccionado no es una imagen. Por favor elija un archivo cuya extension sea: .jpg / .png")
-       }
-    } */
+addImage(event: any): void { /*
+  const file = event.target.files[0];
+  if (!file) return;
 
-  addImage = (event: any): void => {
-  const image = event.target.files[0];
-  if (image && (image.type === 'image/jpeg' || image.type === 'image/png')) {
-    this.images.push(image);
-    this.convertToBlobFile(image).then((imageConverted: any) => {
-      // imageConverted.base es un base64 ya con prefijo data:image/...
-      this.prevImage = imageConverted.base;  
-      this.prevImageBase64 =  imageConverted.base;
-      console.log("prevImageBase64", this.prevImageBase64);
-    });
-  } else {
-    window.alert("El documento seleccionado no es una imagen. Por favor elija un archivo cuya extension sea: .jpg / .png");
+  const reader = new FileReader();
+  reader.readAsDataURL(file);
+  reader.onload = () => {
+    const imageBase64 = reader.result as string;
+    this.prevImage = this.sanitizer.bypassSecurityTrustUrl(imageBase64);
+    this.prevImageBase64 = imageBase64;
+    console.log("Imagen cargada desde input:", this.prevImageBase64);
+  }; */
+
+    const file: File | undefined = event?.target?.files?.[0];
+  if (!file) return;
+
+  if (!/^image\/(png|jpe?g)$/.test(file.type)) {
+    window.alert('El documento seleccionado no es una imagen. Por favor elija un archivo .jpg / .png');
+    return;
   }
-}
+
+  const reader = new FileReader();
+  reader.readAsDataURL(file); // => "data:image/...;base64,xxxx"
+  reader.onload = () => {
+    const base64 = String(reader.result || '');
+    this.prevImageBase64 = base64; // crudo para backend
+    this.prevImage = this.sanitizer.bypassSecurityTrustUrl(base64); // para renderizar
+    console.log('prevImageBase64 (addImage):', base64.slice(0, 80));
+  };
+} 
+ 
+    normalizeImage(image: string | null): string | null {
+        if (!image) return null;
+        // Si ya tiene prefijo, la devuelvo tal cual
+        if (image.startsWith('data:image')) return image;
+        // Si es solo base64, agrego prefijo (jpeg por defecto)
+        return `data:image/jpeg;base64,${image}`;
+        }
  
     convertToBlobFile = async ($event: any) => new Promise((resolve, reject) => {
         try{
@@ -336,7 +376,7 @@ if (producto.image) {
                 this.dialogRef.close();
                 } 
             ) } 
-            
+
         } else {
         this.dialog.open(CancelEditionComponent, { disableClose: true })
         }
