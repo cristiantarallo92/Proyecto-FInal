@@ -1,20 +1,21 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { DomSanitizer, SafeUrl  } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 import { CancelEditionComponent } from '../../Actions/Cancel-Edition/cancel-edition.component';
 
 import { BrandService } from 'src/app/Services/brand.service';
-import { CategoryService } from 'src/app/Services/category.service'; 
-import { ProductService } from 'src/app/Services/product.service'; 
+import { CategoryService } from 'src/app/Services/category.service';
+import { ProductService } from 'src/app/Services/product.service';
 
-import { Input } from 'src/app/Models/input.model'; 
-import { ProductModel } from 'src/app/Models/product.model'; 
+import { Input } from 'src/app/Models/input.model';
+import { ProductModel } from 'src/app/Models/product.model';
 import { BrandModel } from 'src/app/Models/brand.model';
 import { CategoryModel } from '../../../Models/category.model';
 import * as  _ from "lodash";
 import { ModalData } from 'src/app/Models/modal-data.model';
+import { environment } from 'src/environments/environment';
 @Component({
     selector: 'app-info-productos',
     templateUrl: './info-productos.component.html',
@@ -29,8 +30,8 @@ export class InfoProductosComponent implements OnInit {
         category: new FormControl('', [Validators.required]),
         brand: new FormControl('', [Validators.required]),
         stock: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/)]),
-        price: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d+)?$/)]) ,
-       // image: new FormControl(null)
+        price: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d+)?$/)]),
+        // image: new FormControl(null)
     });
     imageConverted: Blob;
     brands: BrandModel[];
@@ -39,10 +40,11 @@ export class InfoProductosComponent implements OnInit {
     categories: CategoryModel[];
     emptyForm: boolean;
     loadingImage: boolean;
-    prevImage: SafeUrl | null = null;   
-    prevImageBase64: string | null = null;  // <<< AGREGAR para guardar base64 crudo
+    prevImage: SafeUrl | null = null;
+    prevImageBase64: string | null = null;  // Para previsualización
+    selectedImageFile: File | null = null;  // Archivo real para enviar al backend (multer)
     images: any = [];
-    formInputs: Input [] = [{
+    formInputs: Input[] = [{
         inputName: 'name',
         editMode: true,
         saveMode: false
@@ -72,38 +74,38 @@ export class InfoProductosComponent implements OnInit {
         editMode: true,
         saveMode: false
     }]
-   
+
     constructor(private brandService: BrandService,
-                private categoryService: CategoryService, 
-                private productService: ProductService,
-                private dialog: MatDialog,
-                private sanitizer: DomSanitizer,
-                public dialogRef: MatDialogRef<InfoProductosComponent>, @Inject(MAT_DIALOG_DATA) public modal: ModalData
+        private categoryService: CategoryService,
+        private productService: ProductService,
+        private dialog: MatDialog,
+        private sanitizer: DomSanitizer,
+        public dialogRef: MatDialogRef<InfoProductosComponent>, @Inject(MAT_DIALOG_DATA) public modal: ModalData
     ) { }
 
-    ngOnInit(): void { 
+    ngOnInit(): void {
         this.brandService.getBrands().subscribe(
-            respond => {   
-            this.brands = respond 
-            } , 
+            respond => {
+                this.brands = respond
+            },
             error => {
             }
-        ) 
+        )
         this.categoryService.getCategories().subscribe(
-            respond => {  
-            this.categories = respond
-            } ,
+            respond => {
+                this.categories = respond
+            },
             error => {
             }
-        ) 
-        this.configModal(); 
-       /* this.product = this.modal.modalData
-        console.log("MODAL !! ", this.modal.modalData)
-        this.prevImage = this.modal.modalData.image */
-       
+        )
+        this.configModal();
+        /* this.product = this.modal.modalData
+         console.log("MODAL !! ", this.modal.modalData)
+         this.prevImage = this.modal.modalData.image */
+
     }
 
-    
+
     configModal = (): void => { /*
         if(this.modal.modalMode) {
             const producto = this.modal.modalData;
@@ -125,36 +127,36 @@ export class InfoProductosComponent implements OnInit {
             this.prevImage = null;
             this.prevImageBase64 = null;}
         } */
- console.log("modalData", this.modal.modalData)
-        
-  if (!this.modal.modalMode) return;
+        console.log("modalData", this.modal.modalData)
 
-  const producto = this.modal.modalData;
-  this.product = producto;
+        if (!this.modal.modalMode) return;
 
-  this.productForm.patchValue({
-    name: producto?.name ?? '',
-    description: producto?.description ?? '',
-    category: producto?.category?.name ?? '',
-    brand: producto?.brand?.name ?? '',
-    stock: producto?.stock ?? '',
-    price: producto?.price ?? ''
-  });
+        const producto = this.modal.modalData;
+        this.product = producto;
 
-  // ⚠️ Soporta image o imageUrl
-  const rawImage: string | null =
-    (producto as any)?.image ?? (producto as any)?.imageUrl ?? null;
+        this.productForm.patchValue({
+            name: producto?.name ?? '',
+            description: producto?.description ?? '',
+            category: producto?.category?.name ?? '',
+            brand: producto?.brand?.name ?? '',
+            stock: producto?.stock ?? '',
+            price: producto?.price ?? ''
+        });
 
-  if (rawImage) {
-    const imageSrc = this.normalizeImage(rawImage); // agrega prefijo si hace falta
-    this.prevImage = this.sanitizer.bypassSecurityTrustUrl(imageSrc);
-    this.prevImageBase64 = imageSrc; // guardo el base64 (con prefijo) para enviar al backend
-  } else {
-    this.prevImage = null;
-    this.prevImageBase64 = null;
-  }
+        // ⚠️ Soporta image o imageUrl
+        const rawImage: string | null =
+            (producto as any)?.image ?? (producto as any)?.imageUrl ?? null;
 
-  this.disabledInput();    
+        if (rawImage) {
+            const imageSrc = this.normalizeImage(rawImage); // agrega prefijo si hace falta
+            this.prevImage = this.sanitizer.bypassSecurityTrustUrl(imageSrc);
+            this.prevImageBase64 = imageSrc; // guardo el base64 (con prefijo) para enviar al backend
+        } else {
+            this.prevImage = null;
+            this.prevImageBase64 = null;
+        }
+
+        this.disabledInput();
     }
 
     disabledInput = (): void => {
@@ -169,7 +171,7 @@ export class InfoProductosComponent implements OnInit {
     configInput = (input: string): void => {
         switch (input) {
             case 'name':
-               // this.productForm.controls[`${input}`].setValue(this.product.productName);
+                // this.productForm.controls[`${input}`].setValue(this.product.productName);
                 break;
             case 'description':
                 this.productForm.controls[`${input}`].setValue(this.product.description);
@@ -217,26 +219,28 @@ export class InfoProductosComponent implements OnInit {
     getInputIndex = (): number => {
         return this.formInputs.findIndex(inp => inp.editMode == false);
     }
-    
 
-    getCategory = ( category:string ): CategoryModel => {   
-        this.categoryService.findCategory(category).subscribe( respond => { 
-                                                                            this.category = respond } ,
-                                                               error   => {} )  
-        console.log("this.category",category)
-        return this.category;     
+
+    getCategory = (category: string): CategoryModel => {
+        this.categoryService.findCategory(category).subscribe(respond => {
+            this.category = respond
+        },
+            error => { })
+        console.log("this.category", category)
+        return this.category;
     }
 
-    getBrand = ( brand:string ): BrandModel => {
-        this.brandService.findBrand(brand).subscribe(  respond => { 
-                                                                      this.brand = respond } ,
-                                                       error   => {
-                                                        
-                                                       } )  
-        console.log("this.brand",brand)
+    getBrand = (brand: string): BrandModel => {
+        this.brandService.findBrand(brand).subscribe(respond => {
+            this.brand = respond
+        },
+            error => {
+
+            })
+        console.log("this.brand", brand)
         return this.brand;
     }
-   
+
     getFormsValues = (): FormData => { /*
  const formDataProd = new FormData();
  const brand : BrandModel = this.getBrand(this.productForm.controls['brand'].value)
@@ -251,48 +255,50 @@ export class InfoProductosComponent implements OnInit {
 
   return formDataProd; */
 
-  const form = this.productForm.value;
+        const form = this.productForm.value;
 
-  // ❌ NO uses llamadas async aquí (getBrand/getCategory). Usá lo ya cargado:
-  const brand = this.brands?.find(b => b.name === form['brand']);
-  const category = this.categories?.find(c => c.name === form['category']);
+        // ❌ NO uses llamadas async aquí (getBrand/getCategory). Usá lo ya cargado:
+        const brand = this.brands?.find(b => b.name === form['brand']);
+        const category = this.categories?.find(c => c.name === form['category']);
 
-  const fd = new FormData();
-  fd.append('name', (form['name'] ?? '').trim());
-  fd.append('description', (form['description'] ?? '').trim());
-  fd.append('price', String(this.convertPrice(form['price'])));
-  fd.append('stock', String(this.convertStock(form['stock'])));
-  fd.append('brandId', brand?.id != null ? String(brand.id) : '');
-  fd.append('categoryId', category?.id != null ? String(category.id) : '');
+        const fd = new FormData();
+        fd.append('name', (form['name'] ?? '').trim());
+        fd.append('description', (form['description'] ?? '').trim());
+        fd.append('price', String(this.convertPrice(form['price'])));
+        fd.append('stock', String(this.convertStock(form['stock'])));
+        fd.append('brandId', brand?.id != null ? String(brand.id) : '');
+        fd.append('categoryId', category?.id != null ? String(category.id) : '');
 
-  // Solo envío imageUrl si tengo algo (evita pisar con vacío)
-  if (this.prevImageBase64) {
-    fd.append('imageUrl', this.prevImageBase64);
-  }
+        // Envío archivo real bajo la clave 'image' (lo que espera Multer)
+        if (this.selectedImageFile) {
+            fd.append('image', this.selectedImageFile);
+        }
 
-  return fd;
+        return fd;
 
     }
-    
-    convertPrice = ( price:any ): number => {
+
+    convertPrice = (price: any): number => {
         if (price === null || price === undefined || price.toString().trim() === '') {
-            return 0; }
-        const normalizedPrice = price.toString().replace(',', '.'); 
-        const parsed = parseFloat(normalizedPrice); 
+            return 0;
+        }
+        const normalizedPrice = price.toString().replace(',', '.');
+        const parsed = parseFloat(normalizedPrice);
         if (isNaN(parsed)) {
-            return 0; }
+            return 0;
+        }
         return parsed;
     }
 
-    convertStock = ( stock:number ): number => {
-        if( stock === undefined || stock == null  || stock.toString().trim() === '' )  {
+    convertStock = (stock: number): number => {
+        if (stock === undefined || stock == null || stock.toString().trim() === '') {
             return 0;
-        } else { 
+        } else {
             return stock;
         }
     }
 
-addImage(event: any): void { /*
+    addImage(event: any): void { /*
   const file = event.target.files[0];
   if (!file) return;
 
@@ -305,104 +311,134 @@ addImage(event: any): void { /*
     console.log("Imagen cargada desde input:", this.prevImageBase64);
   }; */
 
-    const file: File | undefined = event?.target?.files?.[0];
-  if (!file) return;
+        const file: File | undefined = event?.target?.files?.[0];
+        if (!file) return;
 
-  if (!/^image\/(png|jpe?g)$/.test(file.type)) {
-    window.alert('El documento seleccionado no es una imagen. Por favor elija un archivo .jpg / .png');
-    return;
-  }
+        if (!/^image\/(png|jpe?g)$/.test(file.type)) {
+            window.alert('El documento seleccionado no es una imagen. Por favor elija un archivo .jpg / .png');
+            return;
+        }
 
-  const reader = new FileReader();
-  reader.readAsDataURL(file); // => "data:image/...;base64,xxxx"
-  reader.onload = () => {
-    const base64 = String(reader.result || '');
-    this.prevImageBase64 = base64; // crudo para backend
-    this.prevImage = this.sanitizer.bypassSecurityTrustUrl(base64); // para renderizar
-    console.log('prevImageBase64 (addImage):', base64.slice(0, 80));
-  };
-} 
- 
+        const reader = new FileReader();
+        reader.readAsDataURL(file); // => "data:image/...;base64,xxxx"
+        reader.onload = () => {
+            const base64 = String(reader.result || '');
+            this.prevImageBase64 = base64; // solo para renderizar
+            this.prevImage = this.sanitizer.bypassSecurityTrustUrl(base64); // para renderizar
+            console.log('prevImageBase64 (addImage):', base64.slice(0, 80));
+        };
+        // Guardo el archivo real para enviar en el FormData
+        this.selectedImageFile = file;
+    }
+
     normalizeImage(image: string | null): string | null {
         if (!image) return null;
-        // Si ya tiene prefijo, la devuelvo tal cual
+        // 1) Si ya viene como data URL, devolver tal cual
         if (image.startsWith('data:image')) return image;
-        // Si es solo base64, agrego prefijo (jpeg por defecto)
+        // 2) Si es una ruta absoluta o relativa del servidor, construir URL completa
+        if (image.startsWith('http')) return image;
+        if (image.startsWith('/')) return `${environment.API_URL}${image}`;
+        // 3) Si parece ser base64 sin prefijo, agregarlo
         return `data:image/jpeg;base64,${image}`;
-        }
- 
+    }
+
     convertToBlobFile = async ($event: any) => new Promise((resolve, reject) => {
-        try{
+        try {
             const unsafeImg = window.URL.createObjectURL($event);
             const image = this.sanitizer.bypassSecurityTrustUrl(unsafeImg);
             const reader = new FileReader();
             reader.readAsDataURL($event);
-            reader.onload = () => { resolve({ blob: $event,
-                                              image,
-                                              base: reader.result });};
-            reader.onerror = error => { resolve({ blob: $event,
-                                                  image,
-                                                  base: null});};
-        } 
+            reader.onload = () => {
+                resolve({
+                    blob: $event,
+                    image,
+                    base: reader.result
+                });
+            };
+            reader.onerror = error => {
+                resolve({
+                    blob: $event,
+                    image,
+                    base: null
+                });
+            };
+        }
         catch (e) {
-            return null 
+            return null
         }
     })
 
-    saveModal() {  
-        const product = { id: this.product.id, 
-                              name: this.product.name,
-                              description: this.product.description,
-                              brand: this.product.brand,
-                              category: this.product.category,
-                              price: this.convertPrice(this.product.price),
-                              stock: this.product.stock}   
+    saveModal() {
+        const product = {
+            id: this.product.id,
+            name: this.product.name,
+            description: this.product.description,
+            brand: this.product.brand,
+            category: this.product.category,
+            price: this.convertPrice(this.product.price),
+            stock: this.product.stock
+        }
         const prod: FormData = this.getFormsValues();
 
-        if(this.modal.modalMode){
-        if (this.getInputIndex() == -1  ) { 
-            if( _.isEqual(product, this.product) ) {
-                this.dialogRef.close();  
-            } else {  
-            console.log("prod get" , prod.get('imageUrl')  )
-            this.productService.editProduct(this.product.id, prod).subscribe(
-                res => {
-                window.alert("Producto editado correctamente. ");
-                this.dialogRef.close();
-                } , 
-                err => {
-                console.log("err", err);
-                window.alert("ERROR - No pudo completarse la edicion del producto. Por favor intente nuevamente en unos minutos ...");
-                this.dialogRef.close();
-                } 
-            ) } 
-
-        } else {
-        this.dialog.open(CancelEditionComponent, { disableClose: true })
+        // DEBUG: logueo del FormData que se enviará
+        try {
+            const entries = Array.from((prod as any).entries?.() || []);
+            console.log('[INFO-PRODUCTOS] FormData a enviar:', entries.map(([k, v]: any[]) => {
+                const type = typeof v;
+                const preview = type === 'string' ? (v as string).slice(0, 80) : v;
+                return [k, type, preview];
+            }));
+            console.log('[INFO-PRODUCTOS] prevImageBase64? ', !!this.prevImageBase64, 'len:', this.prevImageBase64?.length || 0);
+        } catch (e) {
+            console.log('[INFO-PRODUCTOS] Error inspeccionando FormData', e);
         }
-      } else {
-        this.productService.addProduct(this.product, prod).subscribe(
+
+        if (this.modal.modalMode) {
+            if (this.getInputIndex() == -1) {
+                if (_.isEqual(product, this.product)) {
+                    this.dialogRef.close();
+                } else {
+                    console.log("prod get", prod.get('imageUrl'))
+                    this.productService.editProduct(this.product.id, prod).subscribe(
+                        res => {
+                            console.log('[INFO-PRODUCTOS] Respuesta editProduct()', res);
+                            window.alert("Producto editado correctamente. ");
+                            this.dialogRef.close();
+                        },
+                        err => {
+                            console.log('[INFO-PRODUCTOS] ERROR editProduct()', err);
+                            window.alert("ERROR - No pudo completarse la edicion del producto. Por favor intente nuevamente en unos minutos ...");
+                            this.dialogRef.close();
+                        }
+                    )
+                }
+
+            } else {
+                this.dialog.open(CancelEditionComponent, { disableClose: true })
+            }
+        } else {
+            this.productService.addProduct(this.product, prod).subscribe(
                 () => {
 
-                window.alert("Producto creado correctamente. ");
-                this.dialogRef.close();
+                    window.alert("Producto creado correctamente. ");
+                    this.dialogRef.close();
                 },
-                error  => {
+                error => {
                     console.log("Error - ", error)
                     window.alert("ERROR - No pudo agregar el producto. Por favor intente nuevamente en unos minutos ...");
-                    this.dialogRef.close();  
+                    this.dialogRef.close();
                 }
-              );
-        } 
-    } 
-
-    cancelModal(): void {    
-        this.emptyForm =  Object.values(this.productForm.value).every(value => value === '' || value === null || value == 0) 
-        if( (this.getInputIndex() == -1 && this.emptyForm && this.modal.modalMode == false ) || (this.getInputIndex() == -1 && this.emptyForm  == false && this.modal.modalMode ) ) {
-            this.dialogRef.close();
-            } else {
-            this.dialog.open(CancelEditionComponent, { disableClose: true })
-            }  
+            );
         }
-    
+    }
+
+    cancelModal(): void {
+        this.emptyForm = Object.values(this.productForm.value).every(value => value === '' || value === null || value == 0)
+        if ((this.getInputIndex() == -1 && this.emptyForm && this.modal.modalMode == false) || (this.getInputIndex() == -1 && this.emptyForm == false && this.modal.modalMode)) {
+            this.dialogRef.close();
+        } else {
+            this.dialog.open(CancelEditionComponent, { disableClose: true })
+        }
+    }
+
 }

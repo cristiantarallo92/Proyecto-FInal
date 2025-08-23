@@ -70,7 +70,24 @@ export class ProductService {
 
   editProduct = ( id:number , productFormData: FormData ) : Observable<ProductServ>  => { 
     return this.http.patch<ProductServ>(`${environment.API_URL}/products/${id}`, productFormData).pipe( 
-      tap( ( editProduct ) => { console.log("Edit Product - ", editProduct)
+      tap( ( edited ) => { 
+        console.log('[PRODUCT-SERVICE] PATCH response:', edited);
+        // Refrescar estado local para que la tabla se actualice sin reload
+        const updated = this.productsCollection().map(p => {
+          if (p.id === edited.id) {
+            return {
+              ...p,
+              name: edited.name,
+              description: edited.description,
+              price: edited.price,
+              stock: edited.stock,
+              // Mantener brand/category existentes; si backend no devuelve ids, evitamos lookups
+              image: edited.imageUrl ? `${edited.imageUrl}?t=${Date.now()}` : p.image
+            } as ProductModel;
+          }
+          return p;
+        });
+        this.products$.next(updated);
      })
     )
   }
