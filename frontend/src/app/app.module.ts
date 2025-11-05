@@ -43,7 +43,7 @@ import { ListaEcommerceProductosComponent } from './Components/Ecommerce/Product
 import { DetalleEcommerceProductoComponent } from './Components/Ecommerce/Productos Detalle Ecommerce/detalle-ecommerce-producto.component';
 import { CarritoEcommerceProductosComponent } from './Components/Ecommerce/Productos Carrito Ecommerce/carrito-ecommerce-productos.component';
 import { FinalizaCompraEcommerceComponent } from './Components/Ecommerce/Productos Carrito Finaliza Ecommerce/finaliza-compra-ecommerce.component';
-import { CarritoVacioEcommerceProductoComponent } from './Components/Ecommerce/Productos Vacio Ecommerce/carrito-vacio-ecommerce-producto/carrito-vacio-ecommerce-producto.component';
+import { CarritoVacioEcommerceProductoComponent } from './Components/Ecommerce/Productos Vacio Ecommerce/carrito-vacio-ecommerce-producto.component';
 
 
 

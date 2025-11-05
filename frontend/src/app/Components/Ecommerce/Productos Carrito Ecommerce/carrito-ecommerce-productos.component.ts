@@ -8,6 +8,7 @@ import { EcommerceCartService } from 'src/app/Services/ecommerce-cart.service';
 import { FinalizaCompraEcommerceComponent } from '../Productos Carrito Finaliza Ecommerce/finaliza-compra-ecommerce.component';
 import { DetalleEcommerceProductoComponent } from '../Productos Detalle Ecommerce/detalle-ecommerce-producto.component';
 import { MatDialog } from '@angular/material/dialog';
+import { CarritoVacioEcommerceProductoComponent } from '../Productos Vacio Ecommerce/carrito-vacio-ecommerce-producto.component';
 
 @Component({
   selector: 'app-carrito-ecommerce-productos',
@@ -63,7 +64,9 @@ calculateTotal = (): number => {
 
 finishCart = () => {
   if(this.productsCart.length == 0) {
-    window.alert("No tiene ningun producto en el carrito")
+    const dialog = this.dialog.open(CarritoVacioEcommerceProductoComponent,{
+                disableClose: true
+            })
   } else {
     const dialog = this.dialog.open(FinalizaCompraEcommerceComponent, {
                 disableClose: true,
