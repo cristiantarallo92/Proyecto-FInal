@@ -3,3 +3,31 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+
+.cdk-overlay-container {
+  z-index: 2000 !important; /* asegura que los modales de Angular Material se vean sobre Bootstrap */
+}
+
+.offcanvas {
+  --bs-body-bg: inherit !important;
+  --bs-body-color: inherit !important;
+  --bs-btn-bg: inherit !important;
+  --bs-btn-color: inherit !important;
+}
+
+.offcanvas,
+.modal {
+  --bs-body-bg: var(--bs-body-bg) !important;
+  --bs-body-color: var(--bs-body-color) !important;
+  --bs-btn-bg: var(--bs-btn-bg) !important;
+  --bs-btn-color: var(--bs-btn-color) !important;
+  --bs-btn-border-color: var(--bs-btn-border-color) !important;
+}
+
+/* Hover para botones oscuros */
+.btn-dark:hover,
+.btn-dark:focus {
+  /*color: #000 !important;            */  /* texto negro */
+  /*background-color: #fff !important; */  /* fondo blanco */
+  border-color: #000 !important;      /* borde negro */
+}

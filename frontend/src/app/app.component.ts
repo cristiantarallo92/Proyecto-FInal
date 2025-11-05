@@ -17,10 +17,10 @@ export class AppComponent implements OnInit {
         this.route.events.subscribe( ev => {
             console.log("Evento Router", ev)
         })
-    this.routerService.getCurrentRoute().subscribe(route => {
+   this.routerService.getCurrentRoute().subscribe(route => {
         this.showMenu = !route.includes('login')
-    })
-
+    }) 
+    
     }
 
 } 

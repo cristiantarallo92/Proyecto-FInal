@@ -13,7 +13,10 @@ export const mainManu: Menu[] = [
                           component: '/persona' },
                         { numberOp: 4, 
                           descriptionOp: 'Marcas',
-                          component: '/marca' }
+                          component: '/marca' },
+                        { numberOp: 5, 
+                          descriptionOp: 'Ecommerce',
+                          component: '/ecommerce' },  
                     ]
 
 

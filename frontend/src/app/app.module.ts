@@ -39,6 +39,11 @@ import { InfoPersonasComponent } from './Components/Personas/info-personas/info-
 import { PersonFilterPipe } from './Pipes/person-filter.pipe';
 import { ListaMarcasComponent } from './Components/Marcas/lista-marcas/lista-marcas.component';
 import { InfoMarcasComponent } from './Components/Marcas/info-marcas/info-marcas.component';
+import { ListaEcommerceProductosComponent } from './Components/Ecommerce/Productos Listado Ecommerce/lista-ecommerce-productos.component';
+import { DetalleEcommerceProductoComponent } from './Components/Ecommerce/Productos Detalle Ecommerce/detalle-ecommerce-producto.component';
+import { CarritoEcommerceProductosComponent } from './Components/Ecommerce/Productos Carrito Ecommerce/carrito-ecommerce-productos.component';
+import { FinalizaCompraEcommerceComponent } from './Components/Ecommerce/Productos Carrito Finaliza Ecommerce/finaliza-compra-ecommerce.component';
+import { CarritoVacioEcommerceProductoComponent } from './Components/Ecommerce/Productos Vacio Ecommerce/carrito-vacio-ecommerce-producto/carrito-vacio-ecommerce-producto.component';
 
 
 
@@ -70,9 +75,13 @@ import { InfoMarcasComponent } from './Components/Marcas/info-marcas/info-marcas
     PersonFilterPipe,
     ListaMarcasComponent,
     InfoMarcasComponent,
+    ListaEcommerceProductosComponent,
+    DetalleEcommerceProductoComponent,
+    CarritoEcommerceProductosComponent,
+    FinalizaCompraEcommerceComponent,
+    CarritoVacioEcommerceProductoComponent,
  ],
   imports: [
-    AppRoutingModule,
     ReactiveFormsModule,
     MatDialogModule,
     NoopAnimationsModule,
@@ -80,7 +89,8 @@ import { InfoMarcasComponent } from './Components/Marcas/info-marcas/info-marcas
     MatButtonModule,
     MatTableModule,
     FormsModule,
-    HttpClientModule  
+    HttpClientModule,
+    AppRoutingModule  
   ],
   providers: [],
   bootstrap: [AppComponent]

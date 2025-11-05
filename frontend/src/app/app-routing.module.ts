@@ -8,17 +8,24 @@ import { ListaCategoriaComponent } from './Components/Categoria/lista-categorias
 import { ListaProductosComponent } from './Components/Productos/lista-productos/lista-productos.component';
 import { InfoPersonasComponent } from './Components/Personas/info-personas/info-personas.component';
 import { ListaMarcasComponent } from './Components/Marcas/lista-marcas/lista-marcas.component';
+import { ListaEcommerceProductosComponent } from './Components/Ecommerce/Productos Listado Ecommerce/lista-ecommerce-productos.component';
+import { CarritoEcommerceProductosComponent } from './Components/Ecommerce/Productos Carrito Ecommerce/carrito-ecommerce-productos.component';
 
 
-const routes: Routes = [
-    {path: 'login', component: LoginComponent}, 
-    {path: 'menu', component: MenuComponent},
-    {path: 'remember-account', component: RememberAccountComponent},
-    {path: 'producto', component: ListaProductosComponent},
-    {path: 'categoria', component: ListaCategoriaComponent},
-    {path: 'marca', component: ListaMarcasComponent},
-    {path: 'persona', component: InfoPersonasComponent},
-    {path: '**', component: NotFoundComponent}
+const routes: Routes = [ 
+  {path: 'products', component: ListaProductosComponent },
+  {path: 'login', component: LoginComponent}, 
+  {path: 'menu', component: MenuComponent},
+  {path: 'remember-account', component: RememberAccountComponent},
+  {path: 'producto', component: ListaProductosComponent},
+  {path: 'categoria', component: ListaCategoriaComponent},
+  {path: 'marca', component: ListaMarcasComponent},
+  {path: 'persona', component: InfoPersonasComponent},
+  {path: 'ecommerce', component: ListaEcommerceProductosComponent}, 
+  {path: 'carrito', component: CarritoEcommerceProductosComponent },
+  {path: '', component: NotFoundComponent, pathMatch: 'full' },
+ // {path: '**', component: MenuComponent, pathMatch: 'full' },
+//  {path: '', redirectTo: '/menu', pathMatch: 'full' } 
 ];
 
 @NgModule({
@@ -26,6 +33,6 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 
-export class AppRoutingModule { }
+export class AppRoutingModule { } 
 
 

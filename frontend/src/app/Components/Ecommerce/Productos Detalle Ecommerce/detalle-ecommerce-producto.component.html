@@ -1,0 +1,37 @@
+<div class="container"> 
+    <div class="row">
+        <div class="col-12">
+            <h5 class="navbar navbar-dark bg-dark text-light p-3 justify-content-center">
+                {{modal.name}}
+            </h5>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="d-flex flex-row">
+            <div class="col-6 p-1">
+                <div class="ratio ratio-4x3 border border-3 rounded overflow-hidden p-2">
+                    <img [src]="prevImage" class="w-100 h-100 object-fit-contain"> 
+                </div>
+            </div>
+            <div class="col-6 d-flex flex-column text-center p-1 ">
+                <p> {{ modal.description }}</p>
+                <p> Categoria: {{ modal.category.name }} </p> 
+                <p> Marca: {{ modal.brand.name }} </p>
+                <p> Precio: {{ modal.price }} </p>
+                <P> Stock:  {{ modal.stock }} Unidades</P>
+                <div class="d-flex flex-row justify-content-center align-items-center">
+                    <label class="me-2">Cantidad: </label> 
+                    <input class="w-25" type="number" [(ngModel)]="amount">
+                </div>
+            </div>
+    </div>
+    <div class="row  mt-3">
+        <div class="col-12 d-flex justify-content-center">
+            <div>
+                <button class="btn btn-dark me-1" type="submit" (click)="addProductToCart()"> Agregar Producto </button>
+                <button class="btn btn-dark" type="submit" (click)="closeModal()"> Cancelar </button>
+            </div>
+        </div>
+    </div>    
+</div>
+    

@@ -1,0 +1,81 @@
+<div class="container">
+    <div class="row"> 
+        <div class="col-12">  
+            <h1>
+                Productos 
+            </h1> 
+        </div>        
+    </div>
+    <div class="row  mb-2">
+        <div class="col-12">
+            <form [formGroup]="filterProductForm">  
+                <div class="col-12 p-3 bg-dark text-white d-flex flex-column"> 
+                    <div class="col-12 d-flex flex-column justify-content-around" >
+                        <div class="col-12 d-flex flex-row">
+                            <div class="input-group m-2">
+                                <label class="input-group-text bg-dark text-white w-50"  for="inputGroupSelect01"> Producto </label>
+                                <input class="form-select" type="search" aria-label="Buscar"  formControlName="productName">  
+                            </div>
+                            <div class="input-group m-2">
+                                <label class="input-group-text bg-dark text-white w-50"  for="inputGroupSelect01"> Categoria </label>
+                                <select class="form-select" formControlName="category">
+                                <option  [selected]="selected" [value]="c.name" *ngFor="let c of categories"> {{ c.name }} </option>> 
+                                </select>
+                            </div>
+                            <div class="input-group m-2">
+                                <label  class="input-group-text bg-dark text-white w-50" for="inputGroupSelect01"> Marca </label>
+                                <select  class="form-select" formControlName="brand" >
+                                <option [value]="b.name" *ngFor="let b of brands"> {{ b.name }} </option> 
+                                </select>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="col-12 d-flex justify-content-end mt-3 ">
+                            <button class="btn btn-outline-light me-2" (click)="clearProductsFilter()"> Quitar Filtros </button>
+                            <button class="btn btn-outline-light me-2" (click)="filterProducts()"> Aplicar Filtros </button> 
+                            <button class="btn btn-outline-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
+                                Ver Carrito
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16">
+                                <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
+                                </svg> 
+                            </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row mb-2">
+        <div class="d-flex flex-row justify-content-center col-3 p-2" *ngFor="let p of products">
+            <div class="d-flex card text-center card-width">
+                <div class="ratio ratio-4x3 overflow-hidden">
+                    <img [src]="getPhoto(p)" class="w-100 h-100 object-fit-contain"> 
+                </div>
+                <div class="card-body">
+                <h5 class="card-title"> {{ p.name }} </h5>
+                <p class="card-text"> {{ p.brand.name }} </p> 
+                <p class="card-text"> {{ p.price }} </p>    
+                  <div class="d-flex flex-row justify-content-between">
+                    <buttton class="btn btn-dark btn-outline-light btn-sm border" (click)="showDetailProduct(p)"> Ver Producto </buttton>
+                    <buttton class="btn btn-dark btn-outline-light btn-sm border" (click)="addProductToCart(p,1)"> Agregar al carrito </buttton>
+                  </div>
+                </div>  
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 d-flex justify-content-between">
+            <button class="btn btn-dark" > Pagina Anterior </button>
+            <button class="btn btn-dark" > Pagina Siguiente </button>
+        </div>
+    </div>
+</div> 
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasWithBothOptions">
+  <div class="offcanvas-header">
+    <span></span>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <app-carrito-ecommerce-productos></app-carrito-ecommerce-productos>
+  </div>
+</div> 

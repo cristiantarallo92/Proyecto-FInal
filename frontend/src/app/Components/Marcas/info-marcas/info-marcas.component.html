@@ -55,8 +55,8 @@
     <div class="row p-1">
         <div class="col-12 d-flex justify-content-center">
             <div class="mt-3" mat-dialog-actions>
-                <button class="btn btn-dark m-1" type="button"  [disabled]="this.brandForm.invalid" mat-raised-button (click)="saveModal()"> Guardar </button>
-                <button class="btn btn-dark m-1" type="submit" mat-raised-button (click)="cancelModal()"> Cancelar </button>
+                <button class="btn btn-dark m-1" type="button"  [disabled]="this.brandForm.invalid"  (click)="saveModal()"> Guardar </button>
+                <button class="btn btn-dark m-1" type="submit" (click)="cancelModal()"> Cancelar </button>
             </div>
         </div>     
     </div>

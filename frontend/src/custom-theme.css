@@ -1,0 +1,61 @@
+/* ================== OFFCANVAS PERSONALIZADO ================== */
+.offcanvas,
+.offcanvas-start,
+.offcanvas-end,
+.offcanvas-top,
+.offcanvas-bottom {
+  --bs-offcanvas-width: 30vw !important;
+}
+
+/* Asegura que el contenido dentro del offcanvas tenga padding */
+.offcanvas-body {
+  padding: 1rem 1.5rem !important;
+}
+
+/* ================== BOTONES DENTRO DEL OFFCANVAS ================== */
+.offcanvas .btn {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  /* width: 100%; */
+}
+
+/* ================== MODALES Y BACKDROPS ================== */
+.modal {
+  z-index: 2000 !important;
+}
+
+.modal-backdrop {
+  z-index: 1500 !important;
+}
+
+/* ================== BOTONES RESTAURADOS ================== */
+.btn {
+  box-shadow: none !important;
+  outline: none !important;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn:hover,
+.btn:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.btn:disabled,
+.btn.disabled {
+  opacity: 0.65 !important;
+  pointer-events: none;
+}
+
+/* ================== AJUSTES GENERALES ================== */
+button,
+input,
+select,
+textarea {
+  box-shadow: none !important;
+}
+
+.btn,
+button {
+  outline: none !important;
+}

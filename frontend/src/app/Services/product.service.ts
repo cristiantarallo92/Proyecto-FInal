@@ -40,7 +40,7 @@ export class ProductService {
      )  
   } 
 
-  addProduct = (product: ProductModel, producFormData?: FormData) :Observable<ProductServ> => {
+  addProduct = (producFormData?: FormData) :Observable<ProductServ> => {
   //  return this.http.post<ProductServ>(`${environment.API_URL}/products`,  new ProductServ(product.name, product.description, product.brand.id, product.category.id, product.price, product.stock, null)).pipe(
     return this.http.post<ProductServ>(`${environment.API_URL}/products`, producFormData).pipe(
 
@@ -106,6 +106,3 @@ export class ProductService {
   
 }
 
-/*
-http://localhost:3000/products?quickSearch=&brandId=7&categoryId=5
-http://localhost:3000/products?quickSearch=iphone&brandId=7&categoryId=5 */

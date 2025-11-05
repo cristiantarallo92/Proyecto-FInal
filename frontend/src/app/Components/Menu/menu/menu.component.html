@@ -1,27 +1,6 @@
 <nav class="navbar navbar-dark bg-dark fixed-top">
     <div class="container-fluid">
         <div class="dropdown">
-
-            <!-- -->
-            
-            <!-- 
-            <div class="accordion accordion-flush" id="accordionFlushExample">
-                <div class="accordion-item">
-                  <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                     Cristian Tarallo
-                    </button>
-                  </h2>
-                  <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body">
-                        
-                    </div>
-                  </div>
-                </div>
-              </div> -->
-
-              <!-- -->
-
             <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Cristian Tarallo
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
@@ -48,10 +27,6 @@
             <li *ngFor="let op of menuOps" class="nav-item">
               <a class="nav-link active" aria-current="page" href="" [routerLink]="op.component"> {{op.descriptionOp}} </a>
             </li>
-              
-            <!--  <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
-            </li> -->
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Otras Opciones
@@ -66,12 +41,6 @@
               </ul>
             </li>
           </ul>
-          <!--   
-          <form class="d-flex mt-3" role="search">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-success" type="submit">Search</button>
-          </form>  -->
-
         </div>
       </div>
     </div>

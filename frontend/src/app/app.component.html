@@ -1,4 +1,16 @@
+<div class="container">
+    <div  class="d-flex justify-content-center align-content-center">
+        <div class="align-self-start">
+            <app-menu *ngIf="showMenu"></app-menu>   
+        </div>
+        <div class="align-self-center p-3">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>
 
-    <app-menu *ngIf="showMenu"></app-menu> 
+
+    <!-- 
     <router-outlet></router-outlet>
+    -->
 

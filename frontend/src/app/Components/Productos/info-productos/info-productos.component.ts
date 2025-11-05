@@ -16,6 +16,7 @@ import { CategoryModel } from '../../../Models/category.model';
 import * as  _ from "lodash";
 import { ModalData } from 'src/app/Models/modal-data.model';
 import { environment } from 'src/environments/environment';
+
 @Component({
     selector: 'app-info-productos',
     templateUrl: './info-productos.component.html',
@@ -31,7 +32,6 @@ export class InfoProductosComponent implements OnInit {
         brand: new FormControl('', [Validators.required]),
         stock: new FormControl('', [Validators.required, Validators.pattern(/^\d+$/)]),
         price: new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d+)?$/)]),
-        // image: new FormControl(null)
     });
     imageConverted: Blob;
     brands: BrandModel[];
@@ -41,8 +41,8 @@ export class InfoProductosComponent implements OnInit {
     emptyForm: boolean;
     loadingImage: boolean;
     prevImage: SafeUrl | null = null;
-    prevImageBase64: string | null = null;  // Para previsualización
-    selectedImageFile: File | null = null;  // Archivo real para enviar al backend (multer)
+    prevImageBase64: string | null = null;  
+    selectedImageFile: File | null = null;  
     images: any = [];
     formInputs: Input[] = [{
         inputName: 'name',
@@ -99,35 +99,10 @@ export class InfoProductosComponent implements OnInit {
             }
         )
         this.configModal();
-        /* this.product = this.modal.modalData
-         console.log("MODAL !! ", this.modal.modalData)
-         this.prevImage = this.modal.modalData.image */
-
     }
 
 
-    configModal = (): void => { /*
-        if(this.modal.modalMode) {
-            const producto = this.modal.modalData;
-            this.product = producto;
-            console.log("typeof", typeof(producto.image) );
-            console.log("chatgpt", producto.image);
-            this.productForm.controls['name'].setValue(producto['name']);
-            this.productForm.controls['description'].setValue(producto['description']);
-            this.productForm.controls['category'].setValue(producto.category['name']);
-            this.productForm.controls['brand'].setValue(producto.brand['name']);
-            this.productForm.controls['stock'].setValue(producto['stock']);
-            this.productForm.controls['price'].setValue(producto['price']);
-        if (producto.image) {
-            const imageSrc = this.normalizeImage(producto.image);
-            this.prevImage = this.sanitizer.bypassSecurityTrustUrl(imageSrc);
-            this.prevImageBase64 = imageSrc;
-            console.log("Imagen normalizada en configModal:", this.prevImageBase64);
-        } else {
-            this.prevImage = null;
-            this.prevImageBase64 = null;}
-        } */
-        console.log("modalData", this.modal.modalData)
+    configModal = (): void => { 
 
         if (!this.modal.modalMode) return;
 
@@ -143,7 +118,6 @@ export class InfoProductosComponent implements OnInit {
             price: producto?.price ?? ''
         });
 
-        // ⚠️ Soporta image o imageUrl
         const rawImage: string | null =
             (producto as any)?.image ?? (producto as any)?.imageUrl ?? null;
 
@@ -171,7 +145,6 @@ export class InfoProductosComponent implements OnInit {
     configInput = (input: string): void => {
         switch (input) {
             case 'name':
-                // this.productForm.controls[`${input}`].setValue(this.product.productName);
                 break;
             case 'description':
                 this.productForm.controls[`${input}`].setValue(this.product.description);
@@ -241,23 +214,9 @@ export class InfoProductosComponent implements OnInit {
         return this.brand;
     }
 
-    getFormsValues = (): FormData => { /*
- const formDataProd = new FormData();
- const brand : BrandModel = this.getBrand(this.productForm.controls['brand'].value)
- const category : CategoryModel = this.getCategory(this.productForm.controls['category'].value)
-  formDataProd.append('name', this.productForm.value['name']);
-  formDataProd.append('description', this.productForm.value['description']);
-  formDataProd.append('price', this.productForm.value['price']);
-  formDataProd.append('stock', this.productForm.value['stock']);
-  formDataProd.append('brandId', (brand.id).toString());
-  formDataProd.append('categoryId',(category.id).toString());
-  formDataProd.append('imageUrl', this.prevImageBase64 ?? '');
-
-  return formDataProd; */
+    getFormsValues = (): FormData => { 
 
         const form = this.productForm.value;
-
-        // ❌ NO uses llamadas async aquí (getBrand/getCategory). Usá lo ya cargado:
         const brand = this.brands?.find(b => b.name === form['brand']);
         const category = this.categories?.find(c => c.name === form['category']);
 
@@ -268,14 +227,10 @@ export class InfoProductosComponent implements OnInit {
         fd.append('stock', String(this.convertStock(form['stock'])));
         fd.append('brandId', brand?.id != null ? String(brand.id) : '');
         fd.append('categoryId', category?.id != null ? String(category.id) : '');
-
-        // Envío archivo real bajo la clave 'image' (lo que espera Multer)
         if (this.selectedImageFile) {
             fd.append('image', this.selectedImageFile);
         }
-
         return fd;
-
     }
 
     convertPrice = (price: any): number => {
@@ -298,19 +253,8 @@ export class InfoProductosComponent implements OnInit {
         }
     }
 
-    addImage(event: any): void { /*
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = () => {
-    const imageBase64 = reader.result as string;
-    this.prevImage = this.sanitizer.bypassSecurityTrustUrl(imageBase64);
-    this.prevImageBase64 = imageBase64;
-    console.log("Imagen cargada desde input:", this.prevImageBase64);
-  }; */
-
+    addImage(event: any): void { 
+        
         const file: File | undefined = event?.target?.files?.[0];
         if (!file) return;
 
@@ -417,7 +361,7 @@ export class InfoProductosComponent implements OnInit {
                 this.dialog.open(CancelEditionComponent, { disableClose: true })
             }
         } else {
-            this.productService.addProduct(this.product, prod).subscribe(
+            this.productService.addProduct(prod).subscribe(
                 () => {
 
                     window.alert("Producto creado correctamente. ");
